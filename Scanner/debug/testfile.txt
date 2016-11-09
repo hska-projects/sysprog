@@ -1,0 +1,74 @@
+::Buffer(const char *const fileName){
+	end = false;
+	line = 1;
+	collumn = 1;
+	prevCol = 1;
+	int err1 = posix_memalign((void**) &buf1, 512, 512);
+	if (err1) {
+		cerr << "Buffer Error 1.";
+	}
+	int err2 = posix_memalign((void**) &buf2, 512, 512);
+	if (err2) {
+		cerr << "Buffer Error 2.";
+	}
+
+	file_ = openFileReadOnly(fileName);
+
+	if(file_<0){
+		cerr << "File not found.\n";
+	} else {
+		nbytes = 512;
+		counter = 0;
+		//printf("%i",nbytes);
+		readbytes = read(file_, buf1, nbytes);
+		next = buf1;
+	}
+}
+
+
+
+void Buffer::closeFile(){
+	free (buf1);
+	free (buf2);
+	close(file_);
+}
+
+Buffer::~Buffer() {
+	free (buf1);
+	free (buf2);
+	close (file_);
+}
+int Buffer::getLine(){
+	return line;
+}
+int Buffer::getCollumn(){
+	return collumn;
+}
+bool Buffer::endfile(){
+//	return file_.eof();	
+	return end;
+}
+
+int Buffer::reload(char* buf){
+	counter = nbytes+1;
+
+	for(int i = 0;i < nbytes;i++){
+		buf[i]='\0';
+	}
+	readbytes = read(file_, buf, nbytes);
+	//printf("\n | \n");
+	return readbytes;
+}
+//gibt das Naechste Zeichen aus;
+// gibt NULL zurück wenn des Ende der File erreicht ist
+char Buffer::getChar() {
+	counter++;
+	char c = next[0];
+
+	if (c == '\0') {
+		if (readbytes == nbytes) {
+
+			if (next == &buf1[nbytes]) {
+				reload(buf2);
+
+				next = buf2;
