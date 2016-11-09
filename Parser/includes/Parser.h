@@ -16,8 +16,10 @@ public:
 	ParseTree tree;
 	Rule rules;
 	Scanner scanner;
+	Symboltable* stab;
+	Node current;
 
-	Parser();
+	Parser(char* argv);
 	virtual ~Parser();
 	
 	ParseTree parse();

@@ -12,7 +12,7 @@ ParseTree::ParseTree() {
 
 }
 
-ParseTree::getRoot() {
+Node ParseTree::getRoot() {
 	if (prog == NULL) {
 		prog = new Node(RuleType::PROG);
 		Node decls = new Node(RuleType::DECLS);
