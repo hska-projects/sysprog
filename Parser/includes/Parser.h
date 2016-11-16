@@ -22,18 +22,19 @@ using std::cerr;
 using std::cout;
 
 class Parser {
-public:
+private:
 	ParseTree tree;
 	Rule rules;
 	Scanner scanner;
 	Symboltable* stab;
-	Node current;
+	Node* current;
 
+public:
 	Parser(char* argv);
 	virtual ~Parser();
 	
 	ParseTree parse();
-	Node createNode(Rule rule, Token token);
+	Node* createNode(Rule rule, Token* token);
 	void evaluateRule(Token* token);
 };
 

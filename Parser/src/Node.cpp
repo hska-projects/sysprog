@@ -13,24 +13,24 @@ Node::Node(Rule rule) {
 }
 
 Node::~Node() {
-
 }
 
-bool Node::add_Note(Node child){
+bool Node::add_ChildNode(Node child) {
 	int i = 0;
-	while(childs[i] != NULL) {
+	while(this->childs[i] != NULL) {
 		if (i > 6) {
 			return false;
 		}
 		i++;
 	}
-	childs[i] = child;
+	this->childs[i] = child;
 	return true;
 }
-Token Node::getToken() {
-	return token;
 
+Token* Node::getToken() {
+	return this->token;
 }
+
 void Node::setToken(Token token) {
 	this->token = token;
 }

@@ -8,10 +8,10 @@
 #include <cstddef>
 
 Parser::Parser(char* argv) {
-	tree = new ParseTree();
-	rules = new Rule();
-	stab = new Symboltable();
-	scanner = new Scanner(*argv, stab);
+	this->tree = new ParseTree();
+	this->rules = new Rule();
+	this->stab = new Symboltable();
+	this->scanner = new Scanner(*argv, stab);
 }
 
 Parser::~Parser() {
@@ -128,13 +128,13 @@ ParseTree Parser::parse() {
 	return tree;
 }
 
-Node Parser::createNode(Rule rule, Token token) {
-	Node child = new Node(rule);
+Node* Parser::createNode(Rule rule, Token* token) {
+	Node* child = new Node(rule);
 	if (token != NULL) {
-		child.setToken(token);
+		child->setToken(token);
 	}
 	//eventuell auslagern
-	current.add_Note(child);
+	this->current->add_ChildNode(child);
 	return child;
 }
 

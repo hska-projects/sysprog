@@ -8,19 +8,16 @@
 #include <cstddef>
 
 ParseTree::ParseTree() {
-	prog = getRoot();
-
+	this->prog = getRoot();
 }
 
-Node ParseTree::getRoot() {
-	if (prog == NULL) {
-		prog = new Node(RuleType::PROG);
-		Node decls = new Node(RuleType::DECLS);
-		Node stmts = new Node(RuleType::STATEMENTS);
-		prog.add_Note(decls);
-		prog.add_Note(stmts);
+Node* ParseTree::getRoot() {
+	if (this->prog == NULL) {
+		this->prog = new Node(RuleType::PROG);
+		Node* decls = new Node(RuleType::DECLS);
+		Node* stmts = new Node(RuleType::STATEMENTS);
+		prog->add_ChildNode(decls);
+		prog->add_ChildNode(stmts);
 	}
 	return prog;
 }
-
-

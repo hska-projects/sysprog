@@ -12,16 +12,19 @@
 #include "Rule.h"
 
 class Node : public ParseTree {
-public:
+
+private:
 	Rule rule;
-	Token token;
+	Token* token;
 	Node childs[7];
+
+public:
 	Node(Rule rule);
 	~Node();
-	void setToken(Token token);
-	bool add_Note(Node child);
-	Token getToken();
-};
 
+	void setToken(Token* token);
+	bool add_ChildNode(Node* child);
+	Token* getToken();
+};
 
 #endif /* PARSER_INCLUDES_NODE_H_ */

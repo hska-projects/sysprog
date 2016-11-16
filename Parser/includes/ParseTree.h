@@ -13,16 +13,17 @@
 #include <cstddef>
 
 class ParseTree {
+private:
+	Node* prog;
+
 public:
-	Node prog;
 	ParseTree();
 	~ParseTree();
-	Node getRoot();
-	Node getDecls();
-	Node getSTMTS();
+
+	Node* getRoot();
+	Node* getDecls();
+	Node* getSTMTS();
 	bool typeCheck();
 };
-
-
 
 #endif /* PARSER_INCLUDES_PARSETREE_H_ */
