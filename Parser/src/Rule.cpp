@@ -79,6 +79,9 @@ char* Rule::getClosingType(int closing) {
 		case 8:
 				return ClosingType::SIGN;
 			break;
+		case 9:
+				return ClosingType::INTEGER;
+			break;
 		default:
 			break;
 	}

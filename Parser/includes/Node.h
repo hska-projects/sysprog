@@ -8,20 +8,23 @@
 #ifndef PARSER_INCLUDES_NODE_H_
 #define PARSER_INCLUDES_NODE_H_
 
-#include "../Scanner/includes/Token.h"
+#include "../../Scanner/includes/Token.h"
 #include "Rule.h"
 
-class Node : public ParseTree {
+class Node {
 
 private:
-	Rule rule;
+	RuleType rule;
 	Token* token;
-	Node childs[7];
+	Node* childs[7];
+	bool Leaf;
 
 public:
-	Node(Rule rule);
+	Node(RuleType rule);
+	Node(RuleType rule, Token* token);
 	~Node();
 
+	bool isLeaf();
 	void setToken(Token* token);
 	bool add_ChildNode(Node* child);
 	Token* getToken();

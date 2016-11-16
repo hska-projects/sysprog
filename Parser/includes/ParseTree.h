@@ -21,6 +21,7 @@ public:
 	~ParseTree();
 
 	Node* getRoot();
+	void add_rootNode(Node* node);
 	Node* getDecls();
 	Node* getSTMTS();
 	bool typeCheck();

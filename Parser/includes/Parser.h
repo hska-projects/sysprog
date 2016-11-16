@@ -9,7 +9,8 @@
 #define Parser_H_
 
 #include "ParseTree.h"
-#include "../Scanner/includes/Scanner.h"
+#include "Rule.h"
+#include "../../Scanner/includes/Scanner.h"
 #include "../../Symboltable/includes/Symboltable.h"
 
 #include <cstdlib>
@@ -23,19 +24,30 @@ using std::cout;
 
 class Parser {
 private:
-	ParseTree tree;
-	Rule rules;
-	Scanner scanner;
+	ParseTree* tree;
+	Rule* rules;
+	Scanner* scanner;
 	Symboltable* stab;
-	Node* current;
 
 public:
 	Parser(char* argv);
 	virtual ~Parser();
 	
 	ParseTree parse();
-	Node* createNode(Rule rule, Token* token);
+	Node* createNode(RuleType rule, Token* token);
 	void evaluateRule(Token* token);
+	Node* prog();
+	Node* decls();
+	Node* decl();
+	Node* array();
+	Node* stmt();
+	Node* stmts();
+	Node* exp();
+	Node* exp2();
+	Node* index();
+	Node* op_exp();
+	Node* op();
+	Token* getNextToken(RuleType rule);
 };
 
 #endif /* Parser_H_ */
