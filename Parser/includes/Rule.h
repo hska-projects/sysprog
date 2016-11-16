@@ -20,11 +20,8 @@ class Rule{
 public:
 	Rule();
 	~Rule();
-	char* getRuleType(int rule);
+	char getRuleType(int rule);
 	char* getClosingType(int closing);
-
 };
-
-
 
 #endif /* PARSER_INCLUDES_RULE_H_ */

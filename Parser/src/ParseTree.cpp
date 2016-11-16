@@ -7,6 +7,8 @@
 
 #include <cstddef>
 
+#include "../includes/ParseTree.h"
+
 ParseTree::ParseTree() {
 	this->prog = NULL;
 }
@@ -16,5 +18,5 @@ void ParseTree::add_rootNode(Node* node){
 }
 
 Node* ParseTree::getRoot() {
-	return *prog;
+	return prog;
 }

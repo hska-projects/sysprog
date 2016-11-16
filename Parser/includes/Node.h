@@ -9,7 +9,7 @@
 #define PARSER_INCLUDES_NODE_H_
 
 #include "../../Scanner/includes/Token.h"
-#include "Rule.h"
+#include "../includes/Rule.h"
 
 class Node {
 

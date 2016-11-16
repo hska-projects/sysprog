@@ -7,6 +7,7 @@
 
 #include <cstddef>
 
+#include "../includes/Node.h"
 
 Node::Node(RuleType rule) {
 	token = NULL;
@@ -15,7 +16,7 @@ Node::Node(RuleType rule) {
 }
 
 Node::Node(RuleType rule, Token* token) {
-	this->token = *token;
+	this->token = token;
 	this->rule = rule;
 	Leaf = true;
 }
@@ -31,7 +32,7 @@ bool Node::add_ChildNode(Node* child) {
 		}
 		i++;
 	}
-	this->childs[i] = *child;
+	this->childs[i] = child;
 	return true;
 }
 
@@ -43,7 +44,7 @@ bool Node::isLeaf() {
 	return Leaf;
 }
 
-void Node::setToken(Token token) {
+void Node::setToken(Token* token) {
 	this->token = token;
 	Leaf = true;
 }
