@@ -19,7 +19,7 @@ public:
 	Node(Rule rule);
 	~Node();
 	void setToken(Token token);
-	void add_Note(Node child);
+	bool add_Note(Node child);
 	Token getToken();
 };
 

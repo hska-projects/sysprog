@@ -16,12 +16,16 @@ Node::~Node() {
 
 }
 
-void Node::add_Note(Node child){
+bool Node::add_Note(Node child){
 	int i = 0;
 	while(childs[i] != NULL) {
+		if (i > 6) {
+			return false;
+		}
 		i++;
 	}
 	childs[i] = child;
+	return true;
 }
 Token Node::getToken() {
 	return token;

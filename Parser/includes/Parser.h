@@ -10,6 +10,16 @@
 
 #include "ParseTree.h"
 #include "../Scanner/includes/Scanner.h"
+#include "../../Symboltable/includes/Symboltable.h"
+
+#include <cstdlib>
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+
+using namespace std;
+using std::cerr;
+using std::cout;
 
 class Parser {
 public:
