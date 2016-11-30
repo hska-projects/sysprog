@@ -15,7 +15,6 @@ Parser::Parser(char* argv) {
 	rules = new Rule();
 	stab = new Symboltable();
 	scanner = new Scanner(argv, stab);
-	stab = new Symboltable();
 }
 
 Parser::~Parser() {
@@ -24,10 +23,9 @@ Parser::~Parser() {
 ParseTree Parser::parse() {
 	//TODO call initializiation
 	tree->add_rootNode(prog());
-
-
 	return *tree;
 }
+
 Token Parser::getNextToken() {
 	current = scanner->nextToken();
 	if (current != NULL) {
@@ -114,7 +112,16 @@ Node* Parser::stmts() {
 }
 
 Node* Parser::decl() {
-	return NULL;
+	Node* decl = new Node(DECL);
+	decl->add_ChildNode(new Node(INT, current));
+	decl->add_ChildNode(array());
+	if (current.getTTnummer() == 0) {
+		decl->add_ChildNode(new Node(ID, current));
+	}
+	else {
+		unexpectedTType(0);
+	}
+	return decl;
 }
 
 Node* Parser::stmt() {
@@ -203,7 +210,34 @@ Node* Parser::stmt() {
 }
 
 Node* Parser::array() {
-	return NULL;
+	Node* arr = new Node(ARRAY);
+	getNextToken();
+	if(current.getTTnummer() == 0) { // IdentifierToken
+		// EPSYLON
+		arr->add_ChildNode(new Node(EPSYLON));
+	}
+	else {
+		if(current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == '[') { // Other Token
+			arr->add_ChildNode(new Node(SQUAREOPEN, current));
+			if(current.getTTnummer() == 3) { // Integer Token
+				arr->add_ChildNode(new Node(INTEGER, current));
+				if(current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == ']') { // Other Token
+					arr->add_ChildNode(new Node(SQUARECLOSE, current));
+					getNextToken();
+				}
+				else {
+					unexpectedTType(5);
+				}
+			}
+			else {
+				unexpectedTType(3);
+			}
+		}
+		else {
+			unexpectedTType(5);
+		}
+	}
+	return arr;
 }
 
 Node* Parser::exp() {
