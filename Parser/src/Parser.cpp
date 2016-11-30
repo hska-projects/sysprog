@@ -32,22 +32,21 @@ Token Parser::getNextToken() {
 	current = scanner->nextToken();
 	if (current != NULL) {
 		int col;
-		col = current.getColoumn()
-														if (col > 1) {
-															if (current.getTTnummer() != 5)
-																col -= (current.getInfoKey()->getString()->getLen());
-															else {
-																myString as("Assign");
-																myString son("=:=");
-
-																if (current.getInfoKey()->getString()->compare(as) == 0)
-																	col -= 2;
-																else if (current.getInfoKey()->getString()->compare(son) == 0)
-																	col -= 3;
-																else
-																	col -= 1;
-															}
-														}
+		col = current.getColoumn();
+		if (col > 1) {
+			if (current.getTTnummer() != 5)
+				col -= (current.getInfoKey()->getString()->getLen());
+			else {
+				myString as("Assign");
+				myString son("=:=");
+				if (current.getInfoKey()->getString()->compare(as) == 0)
+					col -= 2;
+				else if (current.getInfoKey()->getString()->compare(son) == 0)
+					col -= 3;
+				else
+					col -= 1;
+			}
+		}
 		current.setColumn(col);
 	}
 	return current;
@@ -104,7 +103,7 @@ Node* Parser::stmts() {
 		}
 	}
 	if(getNextToken()) {
-		//DECLS
+		//STMTS
 		stmts->add_ChildNode(this->stmts());
 	} else {
 		Node* emtpy = new Node(EPSYLON);
@@ -119,12 +118,87 @@ Node* Parser::decl() {
 }
 
 Node* Parser::stmt() {
-//	if(current.getTTnummer() == 0) { // IdentifierToken
-//		Node* id = new Node(IdentifierToken, current);
-//		stmts->add_ChildNode(id);
-//	} else {
-//		unexpectedTType(0);
-//	}
+	Node* stmt = new Node(STATEMENT);
+	if(current.getTTnummer() == 0) { // IdentifierToken
+		Node* id = new Node(ID, current);
+		stmt->add_ChildNode(id);
+		if(getNextToken()) {
+			stmt->add_ChildNode(index());
+		}
+		if(getNextToken()) {
+			if(current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == ':=') { // Other
+				Node* id = new Node(ASSIGN, current);
+				stmt->add_ChildNode(id);
+			} else {
+				unexpectedTType(0);
+			}
+		}
+		if(getNextToken()) {
+			stmt->add_ChildNode(exp());
+		}
+	} else if (current.getTTnummer() == 6) { //Write
+		Node* write = new Node(WRITE, current);
+		stmt->add_ChildNode(write);
+		if(getNextToken()) {
+			if(current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == '(') {
+				Node* klammer = new Node(OPEN, current);
+				stmt->add_ChildNode(klammer);
+			}
+		}
+		if(getNextToken()) {
+			stmt->add_ChildNode(exp());
+		}
+		if(getNextToken()) {
+			if(current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == ')') {
+				Node* klammer = new Node(CLOSE, current);
+				stmt->add_ChildNode(klammer);
+			}
+		}
+	} else if (current.getTTnummer() == 7) {//Read
+		Node* read = new Node(READ, current);
+		stmt->add_ChildNode(read);
+		if(getNextToken()) {
+			if(current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == '(') {
+				Node* klammer = new Node(OPEN, current);
+				stmt->add_ChildNode(klammer);
+			}
+		}
+		if(getNextToken()) {
+			if(current.getTTnummer() == 0) {//identifier
+				Node* id = new Node(ID, current);
+				stmt->add_ChildNode(id);
+			}
+		}
+		if(getNextToken()) {
+			stmt->add_ChildNode(index());
+		}
+		if(getNextToken()) {
+			if(current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == ')') {
+				Node* klammer = new Node(CLOSE, current);
+				stmt->add_ChildNode(klammer);
+			}
+		}
+	} else if (current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == '{') {//{
+		Node* popen = new Node(POPEN, current);
+		stmt->add_ChildNode(popen);
+		if(getNextToken()) {
+			stmt->add_ChildNode(stmts());
+		}
+		if(getNextToken()) {
+			if(current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == '}') {
+				Node* pClose = new Node(PCLOSE, current);
+				stmt->add_ChildNode(pClose);
+			}
+		}
+	} else if (current.getTTnummer() == 1) {//If
+		Node* ifT = new Node(IF, current);
+		stmt->add_ChildNode(ifT);
+
+	} else if (current.getTTnummer() == 2) {//While
+	} else {
+		unexpectedTType(0);
+	}
+
 	return NULL;
 }
 
