@@ -18,6 +18,7 @@ public:
 	Token(TokenTypes tt, int l, int c, Entry* infoKey);
 	TokenTypes getTT();
 	char* getTokenType();
+	void setColumn(int col);
 	int getTTnummer();
 	int getLine();
 	int getColoumn();

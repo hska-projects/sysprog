@@ -19,6 +19,10 @@ Entry* Token::getInfoKey() {
 	return this->infoKey;
 }
 
+void Token::setColumn(int col) {
+	coloumn = col;
+}
+
 int Token::getLine() {
 	return this->line;
 }

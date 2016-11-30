@@ -28,6 +28,7 @@ private:
 	Rule* rules;
 	Scanner* scanner;
 	Symboltable* stab;
+	Token current;
 
 public:
 	Parser(char* argv);
@@ -35,6 +36,7 @@ public:
 	
 	ParseTree parse();
 	Node* createNode(RuleType rule, Token* token);
+	Token getNextToken();
 	void evaluateRule(Token* token);
 	Node* prog();
 	Node* decls();
@@ -47,7 +49,7 @@ public:
 	Node* index();
 	Node* op_exp();
 	Node* op();
-	Token* getNextToken(RuleType rule);
+	void unexpectedTType(int type);
 };
 
 #endif /* Parser_H_ */
