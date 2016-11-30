@@ -20,3 +20,6 @@ void ParseTree::add_rootNode(Node* node){
 Node* ParseTree::getRoot() {
 	return prog;
 }
+
+ParseTree::~ParseTree() {
+}

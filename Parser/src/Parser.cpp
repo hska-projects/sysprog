@@ -11,19 +11,21 @@
 #include "../includes/Node.h"
 #include <cstddef>
 
-Parser::Parser(char* argv) {
+Parser::Parser(char* argv[]) {
+	current = NULL;
 	tree = new ParseTree();
 	rules = new Rule();
 	stab = new Symboltable();
-	scanner = new Scanner(argv, stab);
+	scanner = new Scanner(argv[1], stab);
 }
 
 Parser::~Parser() {
 }
 
 ParseTree Parser::parse() {
-	//TODO call initializiation
+	cout << "Parsing started.." << endl;
 	tree->add_rootNode(prog());
+	cout << "Parsing done." << endl;
 	return *tree;
 }
 

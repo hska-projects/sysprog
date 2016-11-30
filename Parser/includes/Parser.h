@@ -31,7 +31,7 @@ private:
 	Token* current;
 
 public:
-	Parser(char* argv);
+	Parser(char* argv[]);
 	virtual ~Parser();
 	
 	ParseTree parse();
