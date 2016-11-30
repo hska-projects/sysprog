@@ -35,9 +35,7 @@ public:
 	virtual ~Parser();
 	
 	ParseTree parse();
-	Node* createNode(RuleType rule, Token* token);
 	bool getNextToken();
-	void evaluateRule(Token* token);
 	Node* prog();
 	Node* decls();
 	Node* decl();
