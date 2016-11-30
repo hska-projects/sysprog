@@ -28,7 +28,7 @@ private:
 	Rule* rules;
 	Scanner* scanner;
 	Symboltable* stab;
-	Token current;
+	Token* current;
 
 public:
 	Parser(char* argv);
@@ -36,7 +36,7 @@ public:
 	
 	ParseTree parse();
 	Node* createNode(RuleType rule, Token* token);
-	Token getNextToken();
+	bool getNextToken();
 	void evaluateRule(Token* token);
 	Node* prog();
 	Node* decls();

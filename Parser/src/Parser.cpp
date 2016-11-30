@@ -8,6 +8,7 @@
 #include "../includes/Rule.h"
 #include "../../Symboltable/includes/Symboltable.h"
 #include "../../Scanner/includes/Scanner.h"
+#include "../includes/Node.h"
 #include <cstddef>
 
 Parser::Parser(char* argv) {
@@ -26,32 +27,33 @@ ParseTree Parser::parse() {
 	return *tree;
 }
 
-Token Parser::getNextToken() {
+bool Parser::getNextToken() {
 	current = scanner->nextToken();
 	if (current != NULL) {
 		int col;
-		col = current.getColoumn();
+		col = current->getColoumn();
 		if (col > 1) {
-			if (current.getTTnummer() != 5)
-				col -= (current.getInfoKey()->getString()->getLen());
+			if (current->getTTnummer() != 5)
+				col -= (current->getInfoKey()->getString()->getLen());
 			else {
 				myString as("Assign");
 				myString son("=:=");
-				if (current.getInfoKey()->getString()->compare(as) == 0)
+				if (current->getInfoKey()->getString()->compare(as) == 0)
 					col -= 2;
-				else if (current.getInfoKey()->getString()->compare(son) == 0)
+				else if (current->getInfoKey()->getString()->compare(son) == 0)
 					col -= 3;
 				else
 					col -= 1;
 			}
 		}
-		current.setColumn(col);
+		current->setColumn(col);
+		return true;
 	}
-	return current;
+	return false;
 }
 
 void Parser::unexpectedTType(int type) {
-	cerr << "ERROR: Expected: " << TTdef::getTokenType(type) << ", Got: " << TTdef::getTokenType(current.getTTnummer()) << endl;
+	cerr << "ERROR: Expected: " << TTdef::getTokenType(type) << ", Got: " << TTdef::getTokenType(current->getTTnummer()) << endl;
 	cerr << "Stopping..." << endl;
 	exit(1);
 }
@@ -65,12 +67,12 @@ Node* Parser::prog() {
 
 Node* Parser::decls() {
 	Node* decls = new Node(DECLS);
-	if(getNextToken() && current.getTTnummer() == 9) {//IntToken
+	if(getNextToken() && current->getTTnummer() == 9) {//IntToken
 		//DECL
 		decls->add_ChildNode(decl());
 		//;
 		if(getNextToken()) {
-			if(current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == ';') { // Other Token
+			if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ';') { // Other Token
 				Node* sem = new Node(SEMICOLON, current);
 				decls->add_ChildNode(sem);
 			} else {
@@ -93,7 +95,7 @@ Node* Parser::stmts() {
 	//STMT
 	stmts->add_ChildNode(stmt());
 	if(getNextToken()) {
-		if(current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == ';') { // Other Token
+		if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ';') { // Other Token
 			Node* sem = new Node(SEMICOLON, current);
 			stmts->add_ChildNode(sem);
 		} else {
@@ -108,14 +110,14 @@ Node* Parser::stmts() {
 		//epsylon
 		stmts->add_ChildNode(emtpy);
 	}
-	return decls;
+	return stmts;
 }
 
 Node* Parser::decl() {
 	Node* decl = new Node(DECL);
 	decl->add_ChildNode(new Node(INT, current));
 	decl->add_ChildNode(array());
-	if (current.getTTnummer() == 0) {
+	if (current->getTTnummer() == 0) {
 		decl->add_ChildNode(new Node(ID, current));
 	}
 	else {
@@ -126,14 +128,14 @@ Node* Parser::decl() {
 
 Node* Parser::stmt() {
 	Node* stmt = new Node(STATEMENT);
-	if(current.getTTnummer() == 0) { // IdentifierToken
+	if(current->getTTnummer() == 0) { // IdentifierToken
 		Node* id = new Node(ID, current);
 		stmt->add_ChildNode(id);
 		if(getNextToken()) {
 			stmt->add_ChildNode(index());
 		}
 		if(getNextToken()) {
-			if(current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == ':=') { // Other
+			if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ':=') { // Other
 				Node* id = new Node(ASSIGN, current);
 				stmt->add_ChildNode(id);
 			} else {
@@ -143,11 +145,11 @@ Node* Parser::stmt() {
 		if(getNextToken()) {
 			stmt->add_ChildNode(exp());
 		}
-	} else if (current.getTTnummer() == 6) { //Write
+	} else if (current->getTTnummer() == 6) { //Write
 		Node* write = new Node(WRITE, current);
 		stmt->add_ChildNode(write);
 		if(getNextToken()) {
-			if(current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == '(') {
+			if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == '(') {
 				Node* klammer = new Node(OPEN, current);
 				stmt->add_ChildNode(klammer);
 			}
@@ -156,22 +158,22 @@ Node* Parser::stmt() {
 			stmt->add_ChildNode(exp());
 		}
 		if(getNextToken()) {
-			if(current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == ')') {
+			if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ')') {
 				Node* klammer = new Node(CLOSE, current);
 				stmt->add_ChildNode(klammer);
 			}
 		}
-	} else if (current.getTTnummer() == 7) {//Read
+	} else if (current->getTTnummer() == 7) {//Read
 		Node* read = new Node(READ, current);
 		stmt->add_ChildNode(read);
 		if(getNextToken()) {
-			if(current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == '(') {
+			if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == '(') {
 				Node* klammer = new Node(OPEN, current);
 				stmt->add_ChildNode(klammer);
 			}
 		}
 		if(getNextToken()) {
-			if(current.getTTnummer() == 0) {//identifier
+			if(current->getTTnummer() == 0) {//identifier
 				Node* id = new Node(ID, current);
 				stmt->add_ChildNode(id);
 			}
@@ -180,28 +182,28 @@ Node* Parser::stmt() {
 			stmt->add_ChildNode(index());
 		}
 		if(getNextToken()) {
-			if(current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == ')') {
+			if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ')') {
 				Node* klammer = new Node(CLOSE, current);
 				stmt->add_ChildNode(klammer);
 			}
 		}
-	} else if (current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == '{') {//{
+	} else if (current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == '{') {//{
 		Node* popen = new Node(POPEN, current);
 		stmt->add_ChildNode(popen);
 		if(getNextToken()) {
 			stmt->add_ChildNode(stmts());
 		}
 		if(getNextToken()) {
-			if(current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == '}') {
+			if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == '}') {
 				Node* pClose = new Node(PCLOSE, current);
 				stmt->add_ChildNode(pClose);
 			}
 		}
-	} else if (current.getTTnummer() == 1) {//If
+	} else if (current->getTTnummer() == 1) {//If
 		Node* ifT = new Node(IF, current);
 		stmt->add_ChildNode(ifT);
 
-	} else if (current.getTTnummer() == 2) {//While
+	} else if (current->getTTnummer() == 2) {//While
 	} else {
 		unexpectedTType(0);
 	}
@@ -212,16 +214,16 @@ Node* Parser::stmt() {
 Node* Parser::array() {
 	Node* arr = new Node(ARRAY);
 	getNextToken();
-	if(current.getTTnummer() == 0) { // IdentifierToken
+	if(current->getTTnummer() == 0) { // IdentifierToken
 		// EPSYLON
 		arr->add_ChildNode(new Node(EPSYLON));
 	}
 	else {
-		if(current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == '[') { // Other Token
+		if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == '[') { // Other Token
 			arr->add_ChildNode(new Node(SQUAREOPEN, current));
-			if(current.getTTnummer() == 3) { // Integer Token
+			if(current->getTTnummer() == 3) { // Integer Token
 				arr->add_ChildNode(new Node(INTEGER, current));
-				if(current.getTTnummer() == 5 && current.getInfoKey()->getString()->getStr() == ']') { // Other Token
+				if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ']') { // Other Token
 					arr->add_ChildNode(new Node(SQUARECLOSE, current));
 					getNextToken();
 				}
