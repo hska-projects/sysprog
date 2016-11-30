@@ -1,4 +1,5 @@
 #include "../includes/Entry.h"
+#include "../../Scanner/includes/TTdef.h"
 
 Entry::Entry(char* str) {
 	this->str = new myString(str);
