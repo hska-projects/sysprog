@@ -34,7 +34,7 @@ public:
 	Parser(char* argv[]);
 	virtual ~Parser();
 	
-	ParseTree parse();
+	ParseTree* parse();
 	bool getNextToken();
 	Node* prog();
 	Node* decls();

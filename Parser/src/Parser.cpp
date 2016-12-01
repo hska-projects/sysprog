@@ -22,11 +22,11 @@ Parser::Parser(char* argv[]) {
 Parser::~Parser() {
 }
 
-ParseTree Parser::parse() {
+ParseTree* Parser::parse() {
 	cout << "Parsing started.." << endl;
 	tree->add_rootNode(prog());
 	cout << "Parsing done." << endl;
-	return *tree;
+	return tree;
 }
 
 bool Parser::getNextToken() {

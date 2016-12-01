@@ -21,5 +21,9 @@ Node* ParseTree::getRoot() {
 	return prog;
 }
 
+bool ParseTree::typeCheck(){
+	return true;
+}
+
 ParseTree::~ParseTree() {
 }
