@@ -29,6 +29,24 @@ private:
 	Scanner* scanner;
 	Symboltable* stab;
 	Token* current;
+	myString* popen;
+	myString* pclose;
+	myString* assign;
+	myString* open;
+	myString* close;
+	myString* sem;
+	myString* suqareopen;
+	myString* squareclose;
+	myString* minus;
+	myString* emark;
+	myString* plus;
+	myString* star;
+	myString* colon;
+	myString* lt;
+	myString* gt;
+	myString* equals;
+	myString* sonder;
+	myString* andd;
 
 public:
 	Parser(char* argv[]);

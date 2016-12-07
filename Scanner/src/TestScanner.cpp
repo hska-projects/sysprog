@@ -36,9 +36,10 @@ int main(int argc, char* argv[]) {
 					col -= (t->getInfoKey()->getString()->getLen());
 				else {
 					myString as("Assign");
+					myString a("And");
 					myString son("=:=");
 
-					if (t->getInfoKey()->getString()->compare(as) == 0)
+					if (t->getInfoKey()->getString()->compare(as) == 0 || t->getInfoKey()->getString()->compare(a) == 0)
 						col -= 2;
 					else if (t->getInfoKey()->getString()->compare(son) == 0)
 						col -= 3;

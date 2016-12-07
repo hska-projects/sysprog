@@ -159,7 +159,7 @@ Token* Scanner::nextToken() {
 			entry = new Entry(mystring.getStr(), OtherToken);
 			nextToken = new Token(entry->getTT(), buffer->getLine(), buffer->getCollumn(), entry);
 		} else if (mystring.compare(gt) == 0) {
-			myString s("greater than");
+			myString s("Greater than");
 			mystring = s;
 			entry = new Entry(mystring.getStr(), OtherToken);
 			nextToken = new Token(entry->getTT(), buffer->getLine(), buffer->getCollumn(), entry);
