@@ -10,6 +10,7 @@
 #include "../../Scanner/includes/Scanner.h"
 #include "../includes/Node.h"
 #include <cstddef>
+#include <stddef.h>
 
 Parser::Parser(char* argv[]) {
 	current = NULL;
@@ -85,34 +86,42 @@ Node* Parser::prog() {
 
 Node* Parser::decls() {
 	Node* decls = new Node(DECLS);
-	if(getNextToken() && current->getTTnummer() == 9) {//IntToken
-		//DECL
-		decls->add_ChildNode(decl());
-		//;
-		getNextToken();
-		if(current->getTTnummer() == 5 && current->getInfoKey()->getString()->compare(*sem) == 0) { // Other Token
-			Node* sem = new Node(SEMICOLON, current);
-			decls->add_ChildNode(sem);
+	if(getNextToken()) {
+
+		if (current->getTTnummer() == 9) {//IntToken
+			//DECL
+			decls->add_ChildNode(decl());
+			//;
+			getNextToken();
+			if(current->getTTnummer() == 5 && current->getInfoKey()->getString()->compare(*sem) == 0) { // Other Token
+				Node* sem = new Node(SEMICOLON, current);
+				decls->add_ChildNode(sem);
 
 
-			//DECLS
-			decls->add_ChildNode(this->decls());
+				//DECLS
+				decls->add_ChildNode(this->decls());
+			} else {
+				unexpectedTType(5);
+			}
 		} else {
-			unexpectedTType(5);
+			Node* emtpy = new Node(EPSYLON);
+			//epsylon
+			decls->add_ChildNode(emtpy);
 		}
 	} else {
 		Node* emtpy = new Node(EPSYLON);
 		//epsylon
 		decls->add_ChildNode(emtpy);
+		current = NULL;
 	}
 	return decls;
 }
 
 Node* Parser::stmts() {
 	Node* stmts = new Node(STATEMENTS);
-	if(current->getTTnummer() == 0 || current->getTTnummer() == 6 || current->getTTnummer() == 7
+	if(!(current == NULL) && (current->getTTnummer() == 0 || current->getTTnummer() == 6 || current->getTTnummer() == 7
 			|| (current->getTTnummer() == 5 && current->getInfoKey()->getString()->compare(*popen) == 0)
-			|| current->getTTnummer() == 1 || current->getTTnummer() == 2) {
+			|| current->getTTnummer() == 1 || current->getTTnummer() == 2)) {
 		//STMT
 		stmts->add_ChildNode(stmt());
 		getNextToken();
@@ -414,14 +423,14 @@ Node* Parser::op_exp() {
 	Node* op_exp = new Node(EXP);
 	if(current->getTTnummer() == 5
 			&& (current->getInfoKey()->getString()->compare(*plus) == 0
-			|| current->getInfoKey()->getString()->compare(*minus) == 0
-			|| current->getInfoKey()->getString()->compare(*star) == 0
-			|| current->getInfoKey()->getString()->compare(*colon) == 0
-			|| current->getInfoKey()->getString()->compare(*lt) == 0
-			|| current->getInfoKey()->getString()->compare(*gt) == 0
-			|| current->getInfoKey()->getString()->compare(*equals) == 0
-			|| current->getInfoKey()->getString()->compare(*sonder) == 0
-			|| current->getInfoKey()->getString()->compare(*andd) == 0)) {
+					|| current->getInfoKey()->getString()->compare(*minus) == 0
+					|| current->getInfoKey()->getString()->compare(*star) == 0
+					|| current->getInfoKey()->getString()->compare(*colon) == 0
+					|| current->getInfoKey()->getString()->compare(*lt) == 0
+					|| current->getInfoKey()->getString()->compare(*gt) == 0
+					|| current->getInfoKey()->getString()->compare(*equals) == 0
+					|| current->getInfoKey()->getString()->compare(*sonder) == 0
+					|| current->getInfoKey()->getString()->compare(*andd) == 0)) {
 		op_exp->add_ChildNode(op());
 		getNextToken();
 		op_exp->add_ChildNode(exp());
