@@ -74,7 +74,11 @@ bool Parser::getNextToken() {
 }
 
 void Parser::unexpectedTType(int type) {
-	cerr << "ERROR: Expected: " << TTdef::getTokenType(type) << ", Got: " << TTdef::getTokenType(current->getTTnummer()) << endl;
+	if (current == NULL)
+		cerr << "ERROR: Expected: " << TTdef::getTokenType(type) << ", current is NULL" << endl;
+	else {
+		cerr << "ERROR: Expected: " << TTdef::getTokenType(type) << ", Got: " << TTdef::getTokenType(current->getTTnummer()) << endl;
+	}
 	cerr << "Stopping..." << endl;
 	exit(1);
 }
@@ -95,10 +99,9 @@ Node* Parser::decls() {
 			decls->add_ChildNode(decl());
 			//;
 			getNextToken();
-			if(current->getTTnummer() == 5 && current->getInfoKey()->getString()->compare(*sem) == 0) { // Other Token
+			if((current != NULL) && (current->getTTnummer() == 5 && current->getInfoKey()->getString()->compare(*sem) == 0)) { // Other Token
 				Node* sem = new Node(SEMICOLON, current);
 				decls->add_ChildNode(sem);
-
 
 				//DECLS
 				decls->add_ChildNode(this->decls());
