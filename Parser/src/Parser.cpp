@@ -67,6 +67,8 @@ bool Parser::getNextToken() {
 		}
 		current->setColumn(col);
 		return true;
+	} else {
+		current = NULL;
 	}
 	return false;
 }
