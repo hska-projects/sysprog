@@ -77,12 +77,13 @@ Node* Parser::decls() {
 		if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ';') { // Other Token
 			Node* sem = new Node(SEMICOLON, current);
 			decls->add_ChildNode(sem);
+
+
+			//DECLS
+			decls->add_ChildNode(this->decls());
 		} else {
 			unexpectedTType(5);
 		}
-
-		//DECLS
-		decls->add_ChildNode(this->decls());
 	} else {
 		Node* emtpy = new Node(EPSYLON);
 		//epsylon
@@ -102,13 +103,14 @@ Node* Parser::stmts() {
 		if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ';') { // Other Token
 			Node* sem = new Node(SEMICOLON, current);
 			stmts->add_ChildNode(sem);
+
+
+			getNextToken();
+			//STMTS
+			stmts->add_ChildNode(this->stmts());
 		} else {
 			unexpectedTType(0);
 		}
-
-		getNextToken();
-		//STMTS
-		stmts->add_ChildNode(this->stmts());
 	} else {
 		Node* emtpy = new Node(EPSYLON);
 		//epsylon
@@ -141,13 +143,12 @@ Node* Parser::stmt() {
 		if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ':=') { // Other
 			Node* id = new Node(ASSIGN, current);
 			stmt->add_ChildNode(id);
+
+			getNextToken();
+			stmt->add_ChildNode(exp());
 		} else {
 			unexpectedTType(0);
 		}
-
-		getNextToken();
-		stmt->add_ChildNode(exp());
-
 	} else if (current->getTTnummer() == 6) { //Write
 		Node* write = new Node(WRITE, current);
 		stmt->add_ChildNode(write);
@@ -155,16 +156,19 @@ Node* Parser::stmt() {
 		if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == '(') {
 			Node* klammer = new Node(OPEN, current);
 			stmt->add_ChildNode(klammer);
-		}
 
-		getNextToken();
-		stmt->add_ChildNode(exp());
-		getNextToken();
-		if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ')') {
-			Node* klammer = new Node(CLOSE, current);
-			stmt->add_ChildNode(klammer);
+			getNextToken();
+			stmt->add_ChildNode(exp());
+			getNextToken();
+			if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ')') {
+				Node* klammer = new Node(CLOSE, current);
+				stmt->add_ChildNode(klammer);
+			}else {
+				unexpectedTType(5);
+			}
+		}else {
+			unexpectedTType(5);
 		}
-
 	} else if (current->getTTnummer() == 7) {//Read
 		Node* read = new Node(READ, current);
 		stmt->add_ChildNode(read);
@@ -172,20 +176,26 @@ Node* Parser::stmt() {
 		if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == '(') {
 			Node* klammer = new Node(OPEN, current);
 			stmt->add_ChildNode(klammer);
-		}
-		getNextToken();
-		if(current->getTTnummer() == 0) {//identifier
-			Node* id = new Node(ID, current);
-			stmt->add_ChildNode(id);
-		}
 
-		getNextToken();
-		stmt->add_ChildNode(index());
+			getNextToken();
+			if(current->getTTnummer() == 0) {//identifier
+				Node* id = new Node(ID, current);
+				stmt->add_ChildNode(id);
 
-		getNextToken();
-		if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ')') {
-			Node* klammer = new Node(CLOSE, current);
-			stmt->add_ChildNode(klammer);
+				getNextToken();
+				stmt->add_ChildNode(index());
+				getNextToken();
+				if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ')') {
+					Node* klammer = new Node(CLOSE, current);
+					stmt->add_ChildNode(klammer);
+				} else {
+					unexpectedTType(0);
+				}
+			}else {
+				unexpectedTType(0);
+			}
+		} else {
+			unexpectedTType(5);
 		}
 	} else if (current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == '{') {//{
 		Node* popen = new Node(POPEN, current);
@@ -196,6 +206,8 @@ Node* Parser::stmt() {
 		if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == '}') {
 			Node* pClose = new Node(PCLOSE, current);
 			stmt->add_ChildNode(pClose);
+		} else {
+			unexpectedTType(5);
 		}
 	} else if (current->getTTnummer() == 1) {//If
 		Node* ifT = new Node(IF, current);
@@ -204,23 +216,32 @@ Node* Parser::stmt() {
 		if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == '(') {
 			Node* klammer = new Node(OPEN, current);
 			stmt->add_ChildNode(klammer);
+
+			getNextToken();
+			stmt->add_ChildNode(exp());
+			getNextToken();
+			if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ')') {
+				Node* klammer = new Node(CLOSE, current);
+				stmt->add_ChildNode(klammer);
+
+				getNextToken();
+				stmt->add_ChildNode(this->stmt());
+				getNextToken();
+				if(current->getTTnummer() == 8) {
+					Node* elseT = new Node(ELSE, current);
+					stmt->add_ChildNode(elseT);
+
+					getNextToken();
+					stmt->add_ChildNode(this->stmt());
+				} else {
+					unexpectedTType(8);
+				}
+			} else {
+				unexpectedTType(5);
+			}
+		} else {
+			unexpectedTType(5);
 		}
-		getNextToken();
-		stmt->add_ChildNode(exp());
-		getNextToken();
-		if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ')') {
-			Node* klammer = new Node(CLOSE, current);
-			stmt->add_ChildNode(klammer);
-		}
-		getNextToken();
-		stmt->add_ChildNode(this->stmt());
-		getNextToken();
-		if(current->getTTnummer() == 8) {
-			Node* elseT = new Node(ELSE, current);
-			stmt->add_ChildNode(elseT);
-		}
-		getNextToken();
-		stmt->add_ChildNode(this->stmt());
 	} else if (current->getTTnummer() == 2) {//While
 		Node* whileT = new Node(WHILE, current);
 		stmt->add_ChildNode(whileT);
@@ -228,16 +249,22 @@ Node* Parser::stmt() {
 		if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == '(') {
 			Node* klammer = new Node(OPEN, current);
 			stmt->add_ChildNode(klammer);
+
+			getNextToken();
+			stmt->add_ChildNode(exp());
+			getNextToken();
+			if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ')') {
+				Node* klammer = new Node(CLOSE, current);
+				stmt->add_ChildNode(klammer);
+
+				getNextToken();
+				stmt->add_ChildNode(this->stmt());
+			} else {
+				unexpectedTType(5);
+			}
+		} else {
+			unexpectedTType(5);
 		}
-		getNextToken();
-		stmt->add_ChildNode(exp());
-		getNextToken();
-		if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ')') {
-			Node* klammer = new Node(CLOSE, current);
-			stmt->add_ChildNode(klammer);
-		}
-		getNextToken();
-		stmt->add_ChildNode(this->stmt());
 	} else {
 		unexpectedTType(0);
 	}
@@ -255,8 +282,10 @@ Node* Parser::array() {
 	else {
 		if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == '[') { // Other Token
 			arr->add_ChildNode(new Node(SQUAREOPEN, current));
+			getNextToken();
 			if(current->getTTnummer() == 3) { // Integer Token
 				arr->add_ChildNode(new Node(INTEGER, current));
+				getNextToken();
 				if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ']') { // Other Token
 					arr->add_ChildNode(new Node(SQUARECLOSE, current));
 					getNextToken();
@@ -295,6 +324,8 @@ Node* Parser::exp2() {
 		if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == ')') {
 			Node* klammer = new Node(CLOSE, current);
 			exp2->add_ChildNode(klammer);
+		} else {
+			unexpectedTType(5);
 		}
 	} else if (current->getTTnummer() == 0) {//identifier
 		Node* id = new Node(ID, current);
@@ -311,6 +342,8 @@ Node* Parser::exp2() {
 		exp2->add_ChildNode(new Node(EMARK, current));
 		getNextToken();
 		exp2->add_ChildNode(this->exp2());
+	} else {
+		unexpectedTType(400); //Too many, "Error"
 	}
 	return exp2;
 }
@@ -326,8 +359,11 @@ Node* Parser::index() {
 		if(current->getTTnummer() == 5 && *current->getInfoKey()->getString()->getStr() == '}') {
 			Node* klammer = new Node(SQUARECLOSE, current);
 			index->add_ChildNode(klammer);
+		} else {
+			unexpectedTType(5);
 		}
-
+	} else {
+		unexpectedTType(5);
 	}
 	return NULL;
 }
