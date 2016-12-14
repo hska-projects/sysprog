@@ -147,7 +147,7 @@ char Buffer::unGetChar(){
 	}else{
 		counter --;
 		next --;
-		if(next[0]=='\0'){
+		if(next[0]=='\0'){ //Dateianfang
 			next++;
 			if(&next[0]==&buf1[0]){
 				next=&buf2[nbytes];
@@ -158,9 +158,7 @@ char Buffer::unGetChar(){
 			} else {
 //				printf("can not get last");
 			}
-			//next--;
 		}else{
-			//next--;
 		}
 		c = next[0];
 	}
@@ -169,7 +167,6 @@ char Buffer::unGetChar(){
 	} else if(c=='\n'){
 		line--;
 		collumn=prevCol;	
-
 	} else {
 		collumn--;
 	}
