@@ -37,10 +37,11 @@ Token* Scanner::nextToken() {
 			return NULL;
 		}
 		char tempc = buffer->getChar();
+		//set variable for next itteration. If Automat does not determine, abort flow at next itteration
 		if (tempc == '\0') {
 			buffer->wasEndOfFile = true;
 		}
-//old
+		//call automat
 		automat->determineState(tempc);
 		if (tempc != ' ' && tempc != '\t' && tempc != '\n' && tempc != '\0') {
 
@@ -58,6 +59,7 @@ Token* Scanner::nextToken() {
 			myString s(tempc);
 			mystring += s;
 		}
+		//=:= erwartet, nicht erkannt -> erstes Zeichen speichern
 		if (automat->isGoBack()) {
 			if (mystring.getLen() > 1){
 			while (automat->isFinalState() == 0) {
@@ -86,6 +88,7 @@ Token* Scanner::nextToken() {
 	state = automat->getState();
 
 	Entry* entry;
+	//bei i und n letztes Zeichen löschen
 	if (state == 'i') {
 		if (automat->determineLetter(mystring[mystring.getLen()]) == 0) {
 			myString tmp;
