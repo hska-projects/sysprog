@@ -97,12 +97,16 @@ Token* Scanner::nextToken() {
 				tmp += tmp2;
 			}
 			mystring = tmp;
-			buffer->unGetChar();
+			if (!buffer->endfile()) {
+				buffer->unGetChar();
+			}
 		}
 		entry = this->stab->insert(mystring.getStr());
 		nextToken = new Token(entry->getTT(), buffer->getLine(), buffer->getCollumn(), entry);
 	} else if (state == 'n') {
-		buffer->unGetChar();
+		if (!buffer->endfile()) {
+			buffer->unGetChar();
+		}
 
 		if (automat->isDigit(mystring[mystring.getLen()]) == 0) {
 			myString tmp;
