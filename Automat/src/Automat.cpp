@@ -22,6 +22,8 @@ Automat::Automat() {
 	sign1[12] = '}';
 	sign1[13] = '[';
 	sign1[14] = ']';
+	sign1[15] = '&';
+
 		
 	identifierState = 0;
 	numberState = 0;
@@ -158,14 +160,22 @@ void Automat::determineState(char c) {
 	} else if (signState == 2 && c == '&' && isAnd) {
 	//&& erkannt; Token Ende
 		isFinal = true;
-		isSign = false;
+		isSign = true;
 		isNumber = false;
 		isComment = false;
 		isIdentifier = false;
 	} else if (signState == 1) {
 	//sign erkannt (kein Sonderfall)
 		if(numberState > 0 || identifierState > 0 || isSig(c) == 0) {
-		//->ungetChar 
+		//->ungetChar #
+			if (isAnd) {
+				failState = true;
+				isFinal = true;
+				isSign = false;
+				isNumber = false;
+				isComment = false;
+				isIdentifier = false;
+			}
 			goBackState = true;
 		} else {
 		//sign erkannt; Token Ende
@@ -234,6 +244,7 @@ void Automat::initAutomat() {
 	signState = 0;
 	goBackState = false;
 	isComment = false;
+	wasComment = false;
 	isIdentifier = false;
 	isNumber = false;
 	isColon = false;
@@ -243,6 +254,7 @@ void Automat::initAutomat() {
 	isFinal = false;
 	isStar = false;
 	failState = false;
+	isAnd = false;
 	return;
 }
 

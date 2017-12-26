@@ -24,6 +24,19 @@ Node::Node(RuleType rule, Token* token) {
 Node::~Node() {
 }
 
+RuleType Node::getRuleType() {
+	return rule;
+}
+
+
+int Node::countChilds() {
+	return sizeof(childs);
+}
+
+Node* Node::getChild(int i){
+	return childs[i];
+}
+
 bool Node::add_ChildNode(Node* child) {
 	int i = 0;
 	while(this->childs[i] != NULL) {

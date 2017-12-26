@@ -17,7 +17,7 @@ public:
 	Automat();
 	virtual ~Automat();
 	
-	char sign1[15];
+	char sign1[16];
 	
 	int identifierState;
 	int numberState;

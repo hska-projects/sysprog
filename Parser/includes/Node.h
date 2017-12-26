@@ -24,6 +24,9 @@ public:
 	Node(RuleType rule, Token* token);
 	~Node();
 
+	Node* getChild(int i);
+	RuleType getRuleType();
+	int countChilds();
 	bool isLeaf();
 	void setToken(Token* token);
 	bool add_ChildNode(Node* child);

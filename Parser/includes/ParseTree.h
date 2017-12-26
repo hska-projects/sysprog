@@ -24,7 +24,6 @@ public:
 	void add_rootNode(Node* node);
 	Node* getDecls();
 	Node* getSTMTS();
-	bool typeCheck();
 };
 
 #endif /* PARSER_INCLUDES_PARSETREE_H_ */

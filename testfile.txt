@@ -1,5 +1,4 @@
-int n;
-int[3] m;
-n := 3 + 4;
-n := 3*n--5;
-write(n);
+&  &&+-: *<>= :==:=!&&;()[]{}
+m12 12m 1- -1 1:= =!:= =:1 ifw whilea =:=
+aa *:bb:* cc *:dd*:
+wascomment:* cc *: new comment

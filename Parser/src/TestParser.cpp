@@ -9,6 +9,6 @@ int main (int argc, char* argv[]) {
 
 	Parser* parser = new Parser(argv);
 	ParseTree* tree = parser->parse();
-	tree->typeCheck();
+	parser->typeCheck(tree->getRoot());
 	return EXIT_SUCCESS;
 }

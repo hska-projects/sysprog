@@ -66,6 +66,7 @@ public:
 	Node* op_exp();
 	Node* op();
 	void unexpectedTType(int type);
+	bool typeCheck(Node* node);
 };
 
 #endif /* Parser_H_ */
