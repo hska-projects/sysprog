@@ -107,17 +107,18 @@ Token* Scanner::nextToken() {
 		if (!buffer->endfile()) {
 			buffer->unGetChar();
 		}
-
+		int num = 0;
 		if (automat->isDigit(mystring[mystring.getLen()]) == 0) {
 			myString tmp;
 			for (int j = 1; j < mystring.getLen(); j++) {
 				myString tmp2(mystring[j]);
+				num = (mystring[j]-'0') + (num * 10);
 				tmp += tmp2;
 			}
 			mystring = tmp;
 		}
-
 		entry = new Entry(mystring.getStr(), IntegerToken);
+		entry->setValue(num);
 		nextToken = new Token(entry->getTT(), buffer->getLine(), buffer->getCollumn(), entry);
 	} else if (state == 'c') {
 		//do noting
