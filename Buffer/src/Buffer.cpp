@@ -30,6 +30,9 @@ Buffer::Buffer(const char *const fileName){
 	end = false;
 	line = 1;
 	collumn = 1;
+	buf2WasReload = false;
+	buf1WasReload = false;
+	wasEndOfFile = false;
 	prevCol = 1;
 	int err1 = posix_memalign((void**) &buf1, 512, 512);
 	if (err1) {
@@ -97,17 +100,27 @@ char Buffer::getChar() {
 		if (readbytes == nbytes) {
 
 			if (next == &buf1[nbytes]) {
-				reload(buf2);
-
+				if (buf2WasReload == false) {
+					reload(buf2);
+					buf2WasReload = true;
+					buf1WasReload = false;
+				} else {
+					buf2WasReload = false;
+				}
 				next = buf2;
-
-			} else if (next == &buf2[nbytes]) {
-				reload(buf1);
-				next = buf1;
-			} else {
-//				printf("iEOF");
-
 			}
+
+			if (next == &buf2[nbytes]) {
+				if (buf1WasReload == false) {
+					reload(buf1);
+					buf1WasReload = true;
+					buf2WasReload = false;
+				} else {
+					buf1WasReload = false;
+				}
+				next = buf1;
+			}
+
 		} else {
 
 //			printf("oEOF");
@@ -143,25 +156,24 @@ char Buffer::unGetChar(){
 //	}
 	char c;
 	if(counter==0){
-		c='\0';
+		c='\0';//EOF
 	}else{
 		counter --;
 		next --;
 		if(next[0]=='\0'){ //Dateianfang
-			next++;
-			if(&next[0]==&buf1[0]){
-				next=&buf2[nbytes];
-
-			}else if(&next[0]==&buf2[0]){
-				next=&buf1[nbytes];
-
-			} else {
-//				printf("can not get last");
-			}
-		}else{
+			//return NULL;
 		}
 		c = next[0];
 	}
+	
+	if(&next[0]==&buf1[0]){
+		next=&buf2[nbytes];
+		buf1WasReload = true;
+	}else if(&next[0]==&buf2[0]){
+		next=&buf1[nbytes];
+		buf2WasReload = true;
+	}
+	
 	if(c=='\0'){
 		end=true;
 	} else if(c=='\n'){

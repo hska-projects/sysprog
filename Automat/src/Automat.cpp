@@ -87,8 +87,8 @@ void Automat::determineState(char c) {
 		} else if (signState == 2 && c == ':' && isStar) {
 		// *: Kommentarende erkannt
 			isComment = false;
-			wasComment = true;
 			initAutomat();
+			wasComment = true;
 		} else {
 			initIsComment();
 		}
@@ -164,6 +164,14 @@ void Automat::determineState(char c) {
 		isNumber = false;
 		isComment = false;
 		isIdentifier = false;
+	} else if (c != '&' && isAnd) {
+		failState = true;
+		isFinal = false;
+		isSign = false;
+		isNumber = false;
+		isComment = false;
+		isIdentifier = false;
+		goBackState = true;
 	} else if (signState == 1) {
 	//sign erkannt (kein Sonderfall)
 		if(numberState > 0 || identifierState > 0 || isSig(c) == 0) {

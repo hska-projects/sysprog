@@ -28,6 +28,8 @@ public:
 	int collumn;
 	int prevCol;
 	bool wasEndOfFile;
+	bool buf1WasReload;
+	bool buf2WasReload;
 	Buffer(const char *const fileName);
 	~Buffer();
 
