@@ -93,7 +93,6 @@ Node* Parser::prog() {
 Node* Parser::decls() {
 	Node* decls = new Node(DECLS);
 	if(getNextToken()) {
-
 		if (current->getTTnummer() == 9) {//IntToken
 			//DECL
 			decls->add_ChildNode(decl());

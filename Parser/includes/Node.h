@@ -17,6 +17,7 @@ private:
 	RuleType rule;
 	Token* token;
 	Node* childs[7];
+	int childCounter;
 	bool Leaf;
 
 public:

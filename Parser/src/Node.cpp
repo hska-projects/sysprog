@@ -12,13 +12,15 @@
 Node::Node(RuleType rule) {
 	token = NULL;
 	this->rule = rule;
-	Leaf = false;
+	Leaf = true;
+	childCounter = 0;
 }
 
 Node::Node(RuleType rule, Token* token) {
 	this->token = token;
 	this->rule = rule;
 	Leaf = true;
+	childCounter = 0;
 }
 
 Node::~Node() {
@@ -30,7 +32,7 @@ RuleType Node::getRuleType() {
 
 
 int Node::countChilds() {
-	return sizeof(childs);
+	return childCounter;
 }
 
 Node* Node::getChild(int i){
@@ -46,6 +48,8 @@ bool Node::add_ChildNode(Node* child) {
 		i++;
 	}
 	this->childs[i] = child;
+	childCounter++;
+	Leaf = false;
 	return true;
 }
 
@@ -59,5 +63,4 @@ bool Node::isLeaf() {
 
 void Node::setToken(Token* token) {
 	this->token = token;
-	Leaf = true;
 }
