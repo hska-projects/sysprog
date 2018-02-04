@@ -10,6 +10,7 @@
 
 #include "ParseTree.h"
 #include "Rule.h"
+#include "Node.h"
 #include "../../Scanner/includes/Scanner.h"
 #include "../../Symboltable/includes/Symboltable.h"
 
@@ -66,7 +67,6 @@ public:
 	Node* op_exp();
 	Node* op();
 	void unexpectedTType(int type);
-	bool typeCheck(Node* node);
 };
 
 #endif /* Parser_H_ */
