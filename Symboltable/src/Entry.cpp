@@ -21,10 +21,6 @@ Entry* Entry::getNext() {
 	return this->next;
 }
 
-int Entry::getValue() {
-	return value;
-}
-
 myString* Entry::getString() {
 	return this->str;
 }

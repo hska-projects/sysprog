@@ -23,7 +23,6 @@ public:
 	char* getTokenType();
 	int getTTnumber();
 	Entry* getNext();
-	int getValue();
 	void setNext(Entry* newEntry);
 	int getValue();
 	void setValue(int v);
