@@ -21,58 +21,38 @@ void ParseTree::add_rootNode(Node* node) {
 	this->prog = node;
 }
 
-bool ParseTree::typeCheck(Node* node) {
-	if (node->getRuleType() == PROG) {
-		if (typeCheck(node->getChild(0)) && typeCheck(node->getChild(1)))
-			return true;
-	} else if (node->getRuleType() == DECLS) {
-		// EPSYLON
-		if (node->countChilds() == 1
-				&& node->getChild(0)->getRuleType() == EPSYLON)
-			return true;
-		if (node->countChilds() == 3
+void ParseTree::typeCheck(Node* node) {
+	switch (node->getRuleType()) {
+	case PROG:
+		typeCheck(node->getChild(0));
+		typeCheck(node->getChild(1));
+		// TODO node.setType
+		break;
+
+	case DECLS:
 		// DECL
-				&& typeCheck(node->getChild(0))
-				// SEMICOLON [;]
-				&& node->getChild(1)->getRuleType() == SEMICOLON
-				// DECLS
-				&& typeCheck(node->getChild(2)))
-			return true;
-	} else if (node->getRuleType() == STATEMENTS) {
-		// EPSYLON
-		if (node->countChilds() == 1
-				&& node->getChild(0)->getRuleType() == EPSYLON)
-			return true;
-		if (node->countChilds() == 3
-		// STATEMENT
-				&& typeCheck(node->getChild(0))
-				// SEMICOLON [;]
-				&& node->getChild(1)->getRuleType() == SEMICOLON
-				// STATEMENTS
-				&& typeCheck(node->getChild(2)))
-			return true;
-	} else if (node->getRuleType() == DECL) {
-		if (node->getChild(0)->getRuleType() != INT
-				|| node->getChild(1)->getRuleType() != ARRAY
-				|| node->getChild(2)->getRuleType() != ID) {
-			return false;
-		}
-	} else if (node->getRuleType() == ARRAY) {
-		// EPSYLON
-		if (node->countChilds() == 1
-				&& node->getChild(0)->getRuleType() == EPSYLON)
-			return true;
-		// ARRAY
-		if (node->countChilds() == 3
-				&& node->getChild(0)->getRuleType() == SQUAREOPEN
-				&& node->getChild(0)->getRuleType() == INT
-				&& node->getChild(0)->getRuleType() == SQUARECLOSE)
-			return true;
-	} else if (node->getRuleType() == EXP) {
-		// TODO
+		if (node->getChild(0))
+			typeCheck(node->getChild(0));
+		// DECLS
+		if (node->getChild(2))
+			typeCheck(node->getChild(2));
+		// TODO node.setType
+		break;
+
+	case DECL:
+		break;
+
+	case ARRAY:
+		break;
+
+	case STATEMENTS:
+		break;
+
+	case STATEMENT:
+		break;
+
+		// TODO EXP, rest..
 	}
-	// TODO EXP2, rest..
-	return false;
 }
 
 void ParseTree::makeCode() {

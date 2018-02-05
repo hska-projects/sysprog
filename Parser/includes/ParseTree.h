@@ -22,7 +22,7 @@ public:
 
 	Node* getRoot();
 	void add_rootNode(Node* node);
-	bool typeCheck(Node* node);
+	void typeCheck(Node* node);
 	void makeCode();
 };
 

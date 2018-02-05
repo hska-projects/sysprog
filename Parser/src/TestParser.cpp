@@ -10,12 +10,10 @@ int main (int argc, char* argv[]) {
 	Parser* parser = new Parser(argv);
 	ParseTree* tree = parser->parse();
 
-	if (tree->typeCheck(tree->getRoot())) {
-		cout << "typeCheck() success.\n";
-	} else {
-		cerr << "typeCheck() failed.\n";
-	}
+	cout <<"begin typeCheck()";
+	tree->typeCheck(tree->getRoot());
 
+	cout <<"begin makeCode()";
 	tree->makeCode();
 
 	return EXIT_SUCCESS;
