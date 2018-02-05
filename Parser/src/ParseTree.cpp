@@ -28,7 +28,6 @@ void ParseTree::typeCheck(Node* node) {
 	case PROG:
 		typeCheck(node->getChild(0));
 		typeCheck(node->getChild(1));
-		// TODO node.setType
 		break;
 
 	case DECLS:
@@ -38,13 +37,40 @@ void ParseTree::typeCheck(Node* node) {
 		// DECLS
 		if (node->getChild(2))
 			typeCheck(node->getChild(2));
-		// TODO node.setType
 		break;
 
 	case DECL:
+		if (node->countChilds() == 3) {
+			// ARRAY
+			if (node->getChild(2))
+				typeCheck(node->getChild(1));
+			// IDENTIFIER
+			if (node->getChild(2)->getType() != CheckTypes::NOTYPE) {
+				cerr << "identifier already defined" << endl;
+				node->setType(CheckTypes::ERRORTYPE);
+			} else if (node->getChild(1)->getType() == CheckTypes::ERRORTYPE) {
+				node->setType(CheckTypes::ERRORTYPE);
+			} else {
+				if (node->getChild(1)->getType() == CheckTypes::ARRAYTYPE) {
+					node->getChild(2)->getToken()->getInfoKey()->setType(
+							CheckTypes::INTARRAYTYPE);
+				} else {
+					node->getChild(2)->getToken()->getInfoKey()->setType(
+							CheckTypes::INTTYPE);
+				}
+			}
+		}
 		break;
 
 	case ARRAY:
+		if (node->countChilds() == 3) {
+			if (node->getChild(1)->getToken()->getInfoKey()->getValue() > 0) {
+				node->setType(CheckTypes::ARRAYTYPE);
+			} else {
+				cerr << "no valid dimension" << endl;
+				node->setType(CheckTypes::ERRORTYPE);
+			}
+		}
 		break;
 
 	case STATEMENTS:
@@ -52,8 +78,6 @@ void ParseTree::typeCheck(Node* node) {
 
 	case STATEMENT:
 		break;
-
-		// TODO EXP, rest..
 	}
 }
 

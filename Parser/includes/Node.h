@@ -10,11 +10,13 @@
 
 #include "../../Scanner/includes/Token.h"
 #include "../includes/Rule.h"
+#include "../includes/CheckTypes.h"
 
 class Node {
 
 private:
 	RuleType rule;
+	CheckTypes::Type type;
 	Token* token;
 	Node* childs[7];
 	int childCounter;
@@ -32,6 +34,8 @@ public:
 	void setToken(Token* token);
 	bool add_ChildNode(Node* child);
 	Token* getToken();
+	CheckTypes::Type getType();
+	void setType(CheckTypes::Type type);
 };
 
 #endif /* PARSER_INCLUDES_NODE_H_ */
