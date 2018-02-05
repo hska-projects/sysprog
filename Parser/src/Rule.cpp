@@ -13,9 +13,7 @@ Rule::Rule() {
 Rule::~Rule() {
 }
 
-char Rule::getRuleType(int rule) {
-	return 't';
-	/*
+int Rule::getRuleType(int rule) {
 	switch (rule) {
 	case 0:
 		return PROG;
@@ -48,10 +46,10 @@ char Rule::getRuleType(int rule) {
 		return OP_EXP;
 		break;
 	case 10:
-		return RuleType::OP;
+		return OP;
 		break;
 	default:
 		break;
 	}
-	 */
+
 }

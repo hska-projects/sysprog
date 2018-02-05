@@ -11,19 +11,24 @@
 #include "Node.h"
 #include "Rule.h"
 #include <cstddef>
+#include <iostream>
+#include <fstream>
+#include <stdio.h>
 
 class ParseTree {
 private:
 	Node* prog;
+	Buffer* buffer;
+	int marker;
 
 public:
-	ParseTree();
+	ParseTree(Buffer* buffer);
 	~ParseTree();
 
 	Node* getRoot();
 	void add_rootNode(Node* node);
 	void typeCheck(Node* node);
-	void makeCode();
+	void makeCode(Node* node);
 };
 
 #endif /* PARSER_INCLUDES_PARSETREE_H_ */

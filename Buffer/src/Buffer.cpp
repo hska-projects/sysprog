@@ -26,6 +26,13 @@ static int openFileReadOnly(const char* name)
   }
   return fd;
 }
+
+static int openFileWrite() {
+	int fd = open("code.txt", O_RDWR);
+	return fd;
+}
+
+
 Buffer::Buffer(const char *const fileName){
 	end = false;
 	line = 1;
@@ -54,8 +61,19 @@ Buffer::Buffer(const char *const fileName){
 		readbytes = read(file_, buf1, nbytes);
 		next = buf1;
 	}
+
+
+	write_ = openFileWrite();
 }
 
+
+void Buffer::writeCode(char* c){
+	int nbyte = 0;
+		while (c[nbyte] != '\0'){
+			nbyte++;
+		}
+	write(write_, c, nbyte);
+}
 
 
 void Buffer::closeFile(){

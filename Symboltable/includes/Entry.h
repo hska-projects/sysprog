@@ -21,6 +21,7 @@ public:
 	char* getTokenType();
 	int getTTnumber();
 	Entry* getNext();
+	int getValue();
 	void setNext(Entry* newEntry);
 	void setValue(int v);
 	~Entry();

@@ -11,11 +11,11 @@
 
 using std::cerr;
 
-Scanner::Scanner(char* argv, Symboltable* stab) {
+Scanner::Scanner(Buffer* buffer, Symboltable* stab) {
 	// TODO Auto-generated constructor stub
 	//Automat* automat = new Automat();
 	this->automat = new Automat();
-	this->buffer = new Buffer(argv);
+	this->buffer = buffer;
 	this->stab = stab;
 }
 

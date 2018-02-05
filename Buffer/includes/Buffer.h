@@ -18,8 +18,9 @@
 #include <sys/stat.h>
 class Buffer {
 public:
-	char *next,*buf1,*buf2;
+	char *next,*buf1,*buf2, *writebuf;
 	int file_;
+	int write_;
 	int nbytes;
 	int readbytes;
 	int counter;
@@ -33,6 +34,7 @@ public:
 	Buffer(const char *const fileName);
 	~Buffer();
 
+	void writeCode(char* c);
 	void closeFile();
 	int getLine();
 	int getCollumn();

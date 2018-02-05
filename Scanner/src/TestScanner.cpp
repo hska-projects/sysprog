@@ -19,7 +19,8 @@ int main(int argc, char* argv[]) {
 
 	cout << "Processing...\n";
 	Symboltable* stab = new Symboltable();
-	Scanner* s = new Scanner(argv[1], stab);
+	Buffer* buffer = new Buffer(argv[1]);
+	Scanner* s = new Scanner(buffer, stab);
 	Token* t;
 	myString nl("\n");
 	myString tb("\t");

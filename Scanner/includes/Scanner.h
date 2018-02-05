@@ -17,7 +17,7 @@
 
 class Scanner {
 public:
-	Scanner(char* argv, Symboltable* stab);
+	Scanner(Buffer* buffer, Symboltable* stab);
 	Token* nextToken();
 	Symboltable* stab;
 	Buffer* buffer;

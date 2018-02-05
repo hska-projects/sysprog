@@ -20,7 +20,7 @@ class Rule{
 public:
 	Rule();
 	~Rule();
-	char getRuleType(int rule);
+	int getRuleType(int rule);
 	char* getClosingType(int closing);
 };
 

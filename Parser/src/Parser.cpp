@@ -14,10 +14,11 @@
 
 Parser::Parser(char* argv[]) {
 	current = NULL;
-	tree = new ParseTree();
 	rules = new Rule();
 	stab = new Symboltable();
-	scanner = new Scanner(argv[1], stab);
+	Buffer* buffer = new Buffer(argv[1]);
+	tree = new ParseTree(buffer);
+	scanner = new Scanner(buffer, stab);
 	popen = new myString("Left Bracket");//{
 	pclose = new myString("Right Bracket");//}
 	assign = new myString(":=");
