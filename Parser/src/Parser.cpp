@@ -490,7 +490,7 @@ Node* Parser::op() {
 }
 
 Node* Parser::op_exp() {
-	Node* op_exp = new Node(EXP);
+	Node* op_exp = new Node(OP_EXP);
 	if (current->getTTnummer() == 5
 			&& (current->getInfoKey()->getString()->compare(*plus) == 0
 					|| current->getInfoKey()->getString()->compare(*minus) == 0
