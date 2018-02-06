@@ -13,7 +13,7 @@ SCANNERDIR = Scanner
 
 PARSERDIR = Parser
 
-all:	automatOBJs bufferOBJs symboltableOBJs scanner  
+all:	automatOBJs bufferOBJs symboltableOBJs scanner parser
 	@echo "target all"
 
 	

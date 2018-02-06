@@ -44,7 +44,7 @@ void ParseTree::typeCheck(Node* node) {
 	case DECL:
 		if (node->countChilds() == 3) {
 			// ARRAY
-			if (node->getChild(2))
+			if (node->getChild(1))
 				typeCheck(node->getChild(1));
 			// IDENTIFIER
 			if (getEntryType(node->getChild(2)) != CheckTypes::NOTYPE) {
@@ -87,72 +87,68 @@ void ParseTree::typeCheck(Node* node) {
 			typeCheck(node->getChild(2));
 		node->setType(CheckTypes::NOTYPE);
 		break;
-/*
+
 	case STATEMENT:
-		// IDENTIFIER
-		if (node->getChild(0)->getType() == CheckTypes::IDENTIFIER) {
+		// (STATEMENT ::= identifier INDEX := EXP )
+		if (node->getChild(0)->getRuleType() == ID) {
 			// EXP
 			typeCheck(node->getChild(3));
 			// INDEX
 			typeCheck(node->getChild(1));
-			if (get(node->getChild(0)) == CheckTypes::ERRORTYPE
-					|| get(node->getChild(0)) == CheckTypes::NOTYPE) {
-				cerr << "Identifier "
-						<< node->getChild(0)->getToken()->getEntry()->getLexem()
-						<< " not defined" << endl;
+
+			if (getEntryType(node->getChild(0)) == CheckTypes::NOTYPE) {
+				cerr << "identifier not defined" << endl;
 				node->setType(CheckTypes::ERRORTYPE);
 			} else if (node->getChild(3)->getType() == CheckTypes::INTTYPE
-					&& ((get(node->getChild(0)) == CheckTypes::INTTYPE
+					&& ((getEntryType(node->getChild(0)) == CheckTypes::INTTYPE
 							&& node->getChild(1)->getType()
 									== CheckTypes::NOTYPE)
-							|| (get(node->getChild(0))
+							|| (getEntryType(node->getChild(0))
 									== CheckTypes::INTARRAYTYPE
 									&& node->getChild(1)->getType()
 											== CheckTypes::ARRAYTYPE))) {
 				node->setType(CheckTypes::NOTYPE);
 			} else {
-				cerr << "Identifier "
-						<< node->getChild(0)->getToken()->getEntry()->getLexem()
-						<< " incompatible types" << endl;
+				cerr << "incompatible types" << endl;
 				node->setType(CheckTypes::ERRORTYPE);
 			}
 		} else {
-			switch (node->getChild(0)->getToken()->getType()) {
-			case PRINT:     // print ( EXP )
+			switch (node->getChild(0)->getRuleType()) {
+			case WRITE:     // (STATEMENT ::=	write( EXP ) )
+				// EXP
 				typeCheck(node->getChild(2));
 				node->setType(CheckTypes::NOTYPE);
 				break;
 
-			case T_READ:    // read ( identifier INDEX )
+			case READ:     // (STATEMENT ::= read( identifier INDEX) )
 				typeCheck(node->getChild(3));
 
-				if (get(node->getChild(2)) == CheckTypes::ERRORTYPE
-						|| get(node->getChild(2)) == CheckTypes::NOTYPE) {
-					cerr << "Identifier "
-							<< node->getChild(2)->getToken()->getEntry()->getLexem()
-							<< " not defined" << endl;
+				if (getEntryType(node->getChild(2)) == CheckTypes::ERRORTYPE
+						|| getEntryType(node->getChild(2))
+								== CheckTypes::NOTYPE) {
+					cerr << "identifier not defined" << endl;
 					node->setType(CheckTypes::ERRORTYPE);
-				} else if ((get(node->getChild(2)) == CheckTypes::INTTYPE
+				} else if ((getEntryType(node->getChild(2))
+						== CheckTypes::INTTYPE
 						&& node->getChild(3)->getType() == CheckTypes::NOTYPE)
-						|| (get(node->getChild(2)) == CheckTypes::INTARRAYTYPE
+						|| (getEntryType(node->getChild(2))
+								== CheckTypes::INTARRAYTYPE
 								&& node->getChild(3)->getType()
 										== CheckTypes::ARRAYTYPE)) {
 					node->setType(CheckTypes::NOTYPE);
 				} else {
-					cerr << "Identifier "
-							<< node->getChild(2)->getToken()->getEntry()->getLexem()
-							<< " incompatible types" << endl;
+					cerr << "incompatible types" << endl;
 					node->setType(CheckTypes::ERRORTYPE);
 				}
 
 				break;
 
-			case SIGN_LEFTANGLEBRACKET:     // { statements }
+			case POPEN:     // (STATEMENT ::= { STATEMENTS } )
 				typeCheck(node->getChild(1));
 				node->setType(CheckTypes::NOTYPE);
 				break;
 
-			case IF:        // if ( EXP ) STATEMENT else STATEMENT
+			case IF:   // (STATEMENT ::= if	( EXP ) STATEMENT else STATEMENT )
 				typeCheck(node->getChild(2));
 				typeCheck(node->getChild(4));
 				typeCheck(node->getChild(6));
@@ -163,7 +159,7 @@ void ParseTree::typeCheck(Node* node) {
 				}
 				break;
 
-			case WHILE:     // while ( EXP ) STATEMENT
+			case WHILE:     // (STATEMENT ::= while	( EXP ) STATEMENT)
 				typeCheck(node->getChild(2));
 				typeCheck(node->getChild(4));
 				if (node->getChild(2)->getType() == CheckTypes::ERRORTYPE) {
@@ -207,30 +203,28 @@ void ParseTree::typeCheck(Node* node) {
 		break;
 
 	case EXP2:
-		switch (node->getChild(0)->getToken()->getType()) {
-		case SIGN_LEFTBRACKET:
+		//switch (node->getChild(0)->getToken()->getType()) {
+		switch (node->getChild(0)->getRuleType()) {
+		case SQUAREOPEN:
 			typeCheck(node->getChild(1));
 			node->setType(node->getChild(1)->getType());
 			break;
 
-		case IDENTIFIER:
+		case ID:
 			typeCheck(node->getChild(1));
 
-			if (get(node->getChild(0)) == CheckTypes::NOTYPE) {
-				cerr << "Identifier "
-						<< node->getChild(0)->getToken()->getEntry()->getLexem()
-						<< " not defined" << endl;
+			if (getEntryType(node->getChild(0)) == CheckTypes::NOTYPE) {
+				cerr << "identifier not defined" << endl;
 				node->setType(CheckTypes::ERRORTYPE);
-			} else if (get(node->getChild(0)) == CheckTypes::INTTYPE
+			} else if (getEntryType(node->getChild(0)) == CheckTypes::INTTYPE
 					&& node->getChild(1)->getType() == CheckTypes::NOTYPE) {
-				node->setType(get(node->getChild(0)));
-			} else if (get(node->getChild(0)) == CheckTypes::INTARRAYTYPE
+				node->setType(getEntryType(node->getChild(0)));
+			} else if (getEntryType(node->getChild(0))
+					== CheckTypes::INTARRAYTYPE
 					&& node->getChild(1)->getType() == CheckTypes::ARRAYTYPE) {
 				node->setType(CheckTypes::INTTYPE);
 			} else {
-				cerr << "Identifier "
-						<< node->getChild(0)->getToken()->getEntry()->getLexem()
-						<< " no primitive types" << endl;
+				cerr << "no primitive types" << endl;
 				node->setType(CheckTypes::ERRORTYPE);
 			}
 
@@ -240,12 +234,12 @@ void ParseTree::typeCheck(Node* node) {
 			node->setType(CheckTypes::INTTYPE);
 			break;
 
-		case SIGN_SUBTRACTION:
+		case MINUS:
 			typeCheck(node->getChild(1));
 			node->setType(node->getChild(1)->getType());
 			break;
 
-		case SIGN_EXCLAMATION:
+		case EMARK:
 			typeCheck(node->getChild(1));
 			if (node->getChild(1)->getType() != CheckTypes::INTTYPE) {
 				node->setType(CheckTypes::ERRORTYPE);
@@ -271,48 +265,49 @@ void ParseTree::typeCheck(Node* node) {
 		break;
 
 	case OP:
-		switch (node->getChild(0)->getToken()->getType()) {
-		case SIGN_ADDITITON:
+		//switch (node->getChild(0)->getToken()->getType()) {
+		switch (node->getChild(0)->getRuleType()) {
+		case PLUS:
 			node->setType(CheckTypes::OPPLUS);
 			break;
 
-		case SIGN_SUBTRACTION:
+		case MINUS:
 			node->setType(CheckTypes::OPMINUS);
 			break;
 
-		case SIGN_MULTIPLICATION:
+		case STAR:
 			node->setType(CheckTypes::OPMULT);
 			break;
 
-		case SIGN_DIVISION:
+		case COLON:
 			node->setType(CheckTypes::OPDIV);
 			break;
 
-		case SIGN_LT:
+		case LT:
 			node->setType(CheckTypes::OPLESS);
 			break;
 
-		case SIGN_GT:
+		case GT:
 			node->setType(CheckTypes::OPGREATER);
 			break;
 
-		case SIGN_ASSIGN:
+		case EQUALS:
 			node->setType(CheckTypes::OPEQUAL);
 			break;
 
-		case SIGN_NE:
+		case SONDER:
 			node->setType(CheckTypes::OPUNEQUAL);
 			break;
 
-		case SIGN_AMPERSAND:
+		case AND:
 			node->setType(CheckTypes::OPAND);
 			break;
-*/
+
 		default:
 			node->setType(CheckTypes::ERRORTYPE);
 			break;
 		}
-
+	}
 }
 
 CheckTypes::Type ParseTree::getEntryType(Node* node) {

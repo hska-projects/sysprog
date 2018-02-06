@@ -14,7 +14,6 @@
 
 Parser::Parser(char* argv[]) {
 	current = NULL;
-	rules = new Rule();
 	stab = new Symboltable();
 	Buffer* buffer = new Buffer(argv[1]);
 	tree = new ParseTree(buffer);

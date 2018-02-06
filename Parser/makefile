@@ -71,7 +71,7 @@ ParserTest: $(SRCDIR)/TestParser.cpp $(HEADERDIR)/Parser.h
 
 # loeschen aller files im verzeichnis $(OBJDIR) und $(BINDIRTEST) und neu erstellen
 
-cleanScanner:
+cleanParser:
 	rm -rf $(OBJDIR)/*.o
 	rm -rf $(BINDIRTEST)/*
 	$(MAKE) makeTestParser
