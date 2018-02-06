@@ -11,7 +11,7 @@ class Entry {
 private:
 	myString* str;
 	TokenTypes TokenType;
-	CheckTypes::Type type;
+	CheckTypes type;
 	int value;
 	Entry* next;
 
@@ -26,7 +26,7 @@ public:
 	void setNext(Entry* newEntry);
 	int getValue();
 	void setValue(int v);
-	CheckTypes::Type getType();
+	CheckTypes getType();
 	void setType(CheckTypes::Type type);
 	~Entry();
 };

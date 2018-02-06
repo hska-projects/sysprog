@@ -208,89 +208,24 @@ void ParseTree::makeCode(Node* node) {
 	    	}
 	    	break;
 
-
+	    	// EXP ::= EXP2 OP_EXP
+	    	case RuleType::EXP:
+	    		if(node->getChild(1)->getType() == CheckTypes::NOTYPE) {
+	    			makeCode(node->getChild(0));
+	    		} else if (node->getChild(1)->getChild(0)->getType() == CheckTypes::OPGREATER) {
+	    			makeCode(node->getChild(1));
+	    			makeCode(node->getChild(0));
+	    			buffer->writeCode("LES\n");
+	    		} else if (node->getChild(1)->getChild(0)->getType() == CheckTypes::OPUNEQUAL) {
+	    			makeCode(node->getChild(0));
+	    			makeCode(node->getChild(1));
+	    			buffer->writeCode("NOT\n");
+	    		} else {
+	    			makeCode(node->getChild(0));
+	    			makeCode(node->getChild(1));
+	    		}
+	    		break;
 	    	/*
-	        // STATEMENT
-	        case RuleType::STATEMENT:
-	            int m1, m2;
-	            switch (node->getChild(0)->getToken()->getTT()) {
-
-	                // STATEMENT ::= identifier INDEX = EXP
-	                case IdentifierToken:
-	                    makeCode(node->getChildNode(3));
-	                    buffer->writeCode("LA $");
-	                    buffer->writeCode(node->getChildNode(0)->getToken()->getEntry()->getLexem());
-	                    buffer->writeCode("\n");
-	                    makeCode(node->getChildNode(1));
-	                    buffer->writeCode("STR\n");
-	                    break;
-
-	                // STATEMENT ::= print ( EXP )
-	                case WriteToken:
-	                    makeCode(node->getChildNode(2));
-	                    buffer->writeCode("PRI\n");
-	                    break;
-
-	                // STATEMENT ::= read ( identifier INDEX )
-	                case ReadToken:
-	                    buffer->writeCode("REA\n");
-	                    buffer->writeCode("LA $");
-	                    buffer->writeCode(node->getChildNode(2)->getToken()->getEntry()->getLexem());
-	                    buffer->writeCode("\n");
-	                    makeCode(node->getChildNode(3));
-	                    buffer->writeCode("STR\n");
-	                    break;
-
-	                // STATEMENT ::= { STATEMENTS }
-	                case SIGN_LEFTANGLEBRACKET:
-	                    makeCode(node->getChildNode(1));
-	                    break;
-
-	                // STATEMENT ::= if ( EXP ) STATEMENT else STATEMENT
-	                case IF:
-	                    m1 = marker++;
-	                    m2 = marker++;
-	                    makeCode(node->getChildNode(2));
-	                    buffer->writeCode("JIN #m");
-	                    buffer->writeCode(m1);
-	                    buffer->writeCode("\n");
-	                    makeCode(node->getChildNode(4));
-	                    buffer->writeCode("JMP #m");
-	                    buffer->writeCode(m2);
-	                    buffer->writeCode("\n");
-	                    buffer->writeCode("#m");
-	                    buffer->writeCode(m1);
-	                    buffer->writeCode(" NOP\n");
-	                    makeCode(node->getChildNode(6));
-	                    buffer->writeCode("#m");
-	                    buffer->writeCode(m2);
-	                    buffer->writeCode(" NOP\n");
-	                    break;
-
-	                // STATEMENT ::= while ( EXP ) STATEMENT
-	                case WHILE:
-	                    m1 = marker++;
-	                    m2 = marker++;
-	                    buffer->writeCode("#m");
-	                    buffer->writeCode(m1);
-	                    buffer->writeCode(" NOP\n");
-	                    makeCode(node->getChildNode(2));
-	                    buffer->writeCode("JIN #m");
-	                    buffer->writeCode(m2);
-	                    buffer->writeCode("\n");
-	                    makeCode(node->getChildNode(4));
-	                    buffer->writeCode("JMP #m");
-	                    buffer->writeCode(m1);
-	                    buffer->writeCode("\n");
-	                    buffer->writeCode("#m");
-	                    buffer->writeCode(m2);
-	                    buffer->writeCode(" NOP\n");
-	                    break;
-
-	                default:
-	                    break;
-	            }
-	            break;
 
 	        // EXP ::= EXP2 OP_EXP
 	        case RuleType::EXP:

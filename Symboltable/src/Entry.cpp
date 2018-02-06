@@ -49,7 +49,7 @@ void Entry::setValue(int v) {
 	this->value = v;
 }
 
-CheckTypes::Type Entry::getType() {
+CheckTypes Entry::getType() {
 	return this->type;
 }
 
