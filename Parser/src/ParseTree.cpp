@@ -26,7 +26,9 @@ void ParseTree::add_rootNode(Node* node) {
 void ParseTree::typeCheck(Node* node) {
 	switch (node->getRuleType()) {
 	case PROG:
+		// DECLS
 		typeCheck(node->getChild(0));
+		// STATEMENTS
 		typeCheck(node->getChild(1));
 		node->setType(CheckTypes::NOTYPE);
 		break;
@@ -42,6 +44,7 @@ void ParseTree::typeCheck(Node* node) {
 		break;
 
 	case DECL:
+		// (DECL::=	int ARRAY identifier)
 		if (node->countChilds() == 3) {
 			// ARRAY
 			if (node->getChild(1))
@@ -66,6 +69,7 @@ void ParseTree::typeCheck(Node* node) {
 		break;
 
 	case ARRAY:
+		// (ARRAY::=[integer])
 		if (node->countChilds() == 3) {
 			if (node->getChild(1)->getToken()->getInfoKey()->getValue() > 0) {
 				node->setType(CheckTypes::ARRAYTYPE);
@@ -113,8 +117,9 @@ void ParseTree::typeCheck(Node* node) {
 				node->setType(CheckTypes::ERRORTYPE);
 			}
 		} else {
+			// switch (node->getChildNode(0)->getToken()->getType()) {
 			switch (node->getChild(0)->getRuleType()) {
-			case WRITE:     // (STATEMENT ::=	write( EXP ) )
+			case WRITE:     // (STATEMENT ::= write( EXP ) )
 				// EXP
 				typeCheck(node->getChild(2));
 				node->setType(CheckTypes::NOTYPE);
