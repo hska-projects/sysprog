@@ -11,7 +11,7 @@ class Entry {
 private:
 	myString* str;
 	TokenTypes TokenType;
-	CheckTypes::Type type;
+	enum CheckTypes::Type type;
 	int value;
 	Entry* next;
 
