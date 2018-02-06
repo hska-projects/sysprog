@@ -26,7 +26,6 @@ using std::cout;
 class Parser {
 private:
 	ParseTree* tree;
-	Rule* rules;
 	Scanner* scanner;
 	Symboltable* stab;
 	Token* current;
