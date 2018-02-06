@@ -1,1 +1,1 @@
-int o;
+write(5);
