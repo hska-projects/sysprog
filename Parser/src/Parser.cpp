@@ -115,7 +115,7 @@ Node* Parser::decls() {
 									== 0)) { // Other Token
 				Node* sem = new Node(SEMICOLON, current);
 				decls->add_ChildNode(sem);
-
+				wasEpsylon = false;
 				//DECLS
 				decls->add_ChildNode(this->decls());
 			} else {
@@ -165,9 +165,11 @@ Node* Parser::stmts() {
 Node* Parser::decl() {
 	Node* decl = new Node(DECL);
 	decl->add_ChildNode(new Node(INT, current));
+	wasEpsylon = false;
 	decl->add_ChildNode(array());
 	if (current->getTTnummer() == 0) {
 		decl->add_ChildNode(new Node(ID, current));
+		wasEpsylon = false;
 	} else {
 		unexpectedTType(0);
 	}
@@ -179,6 +181,7 @@ Node* Parser::stmt() {
 	if (current->getTTnummer() == 0) { // IdentifierToken
 		Node* id = new Node(ID, current);
 		stmt->add_ChildNode(id);
+		wasEpsylon = false;
 		getNextToken();
 		stmt->add_ChildNode(index());
 		getNextToken();
@@ -209,6 +212,7 @@ Node* Parser::stmt() {
 					&& current->getInfoKey()->getString()->compare(*close)
 							== 0) {
 				Node* klammer = new Node(CLOSE, current);
+				wasEpsylon = false;
 				stmt->add_ChildNode(klammer);
 			} else {
 				unexpectedTType(5);
@@ -219,6 +223,7 @@ Node* Parser::stmt() {
 	} else if (current->getTTnummer() == 7) { //Read
 		Node* read = new Node(READ, current);
 		stmt->add_ChildNode(read);
+		wasEpsylon = false;
 		getNextToken();
 		if (current->getTTnummer() == 5
 				&& current->getInfoKey()->getString()->compare(*open) == 0) {
@@ -238,6 +243,7 @@ Node* Parser::stmt() {
 								== 0) {
 					Node* klammer = new Node(CLOSE, current);
 					stmt->add_ChildNode(klammer);
+					wasEpsylon = false;
 				} else {
 					unexpectedTType(0);
 				}
@@ -259,6 +265,7 @@ Node* Parser::stmt() {
 				&& current->getInfoKey()->getString()->compare(*pclose) == 0) {
 			Node* pClose = new Node(PCLOSE, current);
 			stmt->add_ChildNode(pClose);
+			wasEpsylon = false;
 		} else {
 			unexpectedTType(5);
 		}
@@ -392,6 +399,7 @@ Node* Parser::exp2() {
 				&& current->getInfoKey()->getString()->compare(*close) == 0) {
 			Node* klammer = new Node(CLOSE, current);
 			exp2->add_ChildNode(klammer);
+			wasEpsylon = false;
 		} else {
 			unexpectedTType(5);
 		}
@@ -403,6 +411,7 @@ Node* Parser::exp2() {
 		exp2->add_ChildNode(index());
 	} else if (current->getTTnummer() == 3) { //integer
 		exp2->add_ChildNode(new Node(INTEGER, current));
+		wasEpsylon = false;
 	} else if (current->getTTnummer() == 5
 			&& current->getInfoKey()->getString()->compare(*minus) == 0) {
 		exp2->add_ChildNode(new Node(MINUS, current));
@@ -433,8 +442,8 @@ Node* Parser::index() {
 		getNextToken();
 		if (current->getTTnummer() == 5
 				&& current->getInfoKey()->getString()->compare(*pclose) == 0) {
-			Node* klammer = new Node(SQUARECLOSE, current);
-			index->add_ChildNode(klammer);
+			index->add_ChildNode(new Node(SQUARECLOSE, current));
+			wasEpsylon = false;
 		} else {
 			unexpectedTType(5);
 		}
@@ -449,22 +458,31 @@ Node* Parser::op() {
 	Node* op = new Node(OP);
 	if (current->getInfoKey()->getString()->compare(*plus) == 0) {
 		op->add_ChildNode(new Node(PLUS, current));
+		wasEpsylon = false;
 	} else if (current->getInfoKey()->getString()->compare(*minus) == 0) {
 		op->add_ChildNode(new Node(MINUS, current));
+		wasEpsylon = false;
 	} else if (current->getInfoKey()->getString()->compare(*star) == 0) {
 		op->add_ChildNode(new Node(STAR, current));
+		wasEpsylon = false;
 	} else if (current->getInfoKey()->getString()->compare(*colon) == 0) {
 		op->add_ChildNode(new Node(COLON, current));
+		wasEpsylon = false;
 	} else if (current->getInfoKey()->getString()->compare(*lt) == 0) {
 		op->add_ChildNode(new Node(LT, current));
+		wasEpsylon = false;
 	} else if (current->getInfoKey()->getString()->compare(*gt) == 0) {
 		op->add_ChildNode(new Node(GT, current));
+		wasEpsylon = false;
 	} else if (current->getInfoKey()->getString()->compare(*equals) == 0) {
 		op->add_ChildNode(new Node(EQUALS, current));
+		wasEpsylon = false;
 	} else if (current->getInfoKey()->getString()->compare(*sonder) == 0) {
 		op->add_ChildNode(new Node(SONDER, current));
+		wasEpsylon = false;
 	} else if (current->getInfoKey()->getString()->compare(*andd) == 0) {
 		op->add_ChildNode(new Node(AND, current));
+		wasEpsylon = false;
 	} else {
 		unexpectedTType(5);
 	}
