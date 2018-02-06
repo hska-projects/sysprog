@@ -10,6 +10,8 @@
 
 #include "Node.h"
 #include "Rule.h"
+#include "../../Buffer/includes/Buffer.h"
+
 #include <cstddef>
 #include <iostream>
 
@@ -17,17 +19,18 @@ using namespace std;
 
 class ParseTree {
 private:
-	Node* prog;
 	Buffer* buffer;
+	Node* prog;
 	int marker;
 
 public:
 	ParseTree(Buffer* buffer);
-	~ParseTree();
+	virtual ~ParseTree();
 
 	Node* getRoot();
 	void add_rootNode(Node* node);
 	void typeCheck(Node* node);
+	CheckTypes::Type getEntryType(Node* node);
 	void makeCode(Node* node);
 };
 

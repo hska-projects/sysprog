@@ -28,6 +28,7 @@ void ParseTree::typeCheck(Node* node) {
 	case PROG:
 		typeCheck(node->getChild(0));
 		typeCheck(node->getChild(1));
+		node->setType(CheckTypes::NOTYPE);
 		break;
 
 	case DECLS:
@@ -37,6 +38,7 @@ void ParseTree::typeCheck(Node* node) {
 		// DECLS
 		if (node->getChild(2))
 			typeCheck(node->getChild(2));
+		node->setType(CheckTypes::NOTYPE);
 		break;
 
 	case DECL:
@@ -45,12 +47,13 @@ void ParseTree::typeCheck(Node* node) {
 			if (node->getChild(2))
 				typeCheck(node->getChild(1));
 			// IDENTIFIER
-			if (node->getChild(2)->getType() != CheckTypes::NOTYPE) {
+			if (getEntryType(node->getChild(2)) != CheckTypes::NOTYPE) {
 				cerr << "identifier already defined" << endl;
 				node->setType(CheckTypes::ERRORTYPE);
 			} else if (node->getChild(1)->getType() == CheckTypes::ERRORTYPE) {
 				node->setType(CheckTypes::ERRORTYPE);
 			} else {
+				node->setType(CheckTypes::NOTYPE);
 				if (node->getChild(1)->getType() == CheckTypes::ARRAYTYPE) {
 					node->getChild(2)->getToken()->getInfoKey()->setType(
 							CheckTypes::INTARRAYTYPE);
@@ -70,15 +73,250 @@ void ParseTree::typeCheck(Node* node) {
 				cerr << "no valid dimension" << endl;
 				node->setType(CheckTypes::ERRORTYPE);
 			}
+		} else {
+			node->setType(CheckTypes::NOTYPE);
 		}
 		break;
 
 	case STATEMENTS:
+		// STATEMENT
+		if (node->getChild(0))
+			typeCheck(node->getChild(0));
+		// STATEMENTS
+		if (node->getChild(2))
+			typeCheck(node->getChild(2));
+		node->setType(CheckTypes::NOTYPE);
+		break;
+/*
+	case STATEMENT:
+		// IDENTIFIER
+		if (node->getChild(0)->getType() == CheckTypes::IDENTIFIER) {
+			// EXP
+			typeCheck(node->getChild(3));
+			// INDEX
+			typeCheck(node->getChild(1));
+			if (get(node->getChild(0)) == CheckTypes::ERRORTYPE
+					|| get(node->getChild(0)) == CheckTypes::NOTYPE) {
+				cerr << "Identifier "
+						<< node->getChild(0)->getToken()->getEntry()->getLexem()
+						<< " not defined" << endl;
+				node->setType(CheckTypes::ERRORTYPE);
+			} else if (node->getChild(3)->getType() == CheckTypes::INTTYPE
+					&& ((get(node->getChild(0)) == CheckTypes::INTTYPE
+							&& node->getChild(1)->getType()
+									== CheckTypes::NOTYPE)
+							|| (get(node->getChild(0))
+									== CheckTypes::INTARRAYTYPE
+									&& node->getChild(1)->getType()
+											== CheckTypes::ARRAYTYPE))) {
+				node->setType(CheckTypes::NOTYPE);
+			} else {
+				cerr << "Identifier "
+						<< node->getChild(0)->getToken()->getEntry()->getLexem()
+						<< " incompatible types" << endl;
+				node->setType(CheckTypes::ERRORTYPE);
+			}
+		} else {
+			switch (node->getChild(0)->getToken()->getType()) {
+			case PRINT:     // print ( EXP )
+				typeCheck(node->getChild(2));
+				node->setType(CheckTypes::NOTYPE);
+				break;
+
+			case T_READ:    // read ( identifier INDEX )
+				typeCheck(node->getChild(3));
+
+				if (get(node->getChild(2)) == CheckTypes::ERRORTYPE
+						|| get(node->getChild(2)) == CheckTypes::NOTYPE) {
+					cerr << "Identifier "
+							<< node->getChild(2)->getToken()->getEntry()->getLexem()
+							<< " not defined" << endl;
+					node->setType(CheckTypes::ERRORTYPE);
+				} else if ((get(node->getChild(2)) == CheckTypes::INTTYPE
+						&& node->getChild(3)->getType() == CheckTypes::NOTYPE)
+						|| (get(node->getChild(2)) == CheckTypes::INTARRAYTYPE
+								&& node->getChild(3)->getType()
+										== CheckTypes::ARRAYTYPE)) {
+					node->setType(CheckTypes::NOTYPE);
+				} else {
+					cerr << "Identifier "
+							<< node->getChild(2)->getToken()->getEntry()->getLexem()
+							<< " incompatible types" << endl;
+					node->setType(CheckTypes::ERRORTYPE);
+				}
+
+				break;
+
+			case SIGN_LEFTANGLEBRACKET:     // { statements }
+				typeCheck(node->getChild(1));
+				node->setType(CheckTypes::NOTYPE);
+				break;
+
+			case IF:        // if ( EXP ) STATEMENT else STATEMENT
+				typeCheck(node->getChild(2));
+				typeCheck(node->getChild(4));
+				typeCheck(node->getChild(6));
+				if (node->getChild(2)->getType() == CheckTypes::ERRORTYPE) {
+					node->setType(CheckTypes::ERRORTYPE);
+				} else {
+					node->setType(CheckTypes::NOTYPE);
+				}
+				break;
+
+			case WHILE:     // while ( EXP ) STATEMENT
+				typeCheck(node->getChild(2));
+				typeCheck(node->getChild(4));
+				if (node->getChild(2)->getType() == CheckTypes::ERRORTYPE) {
+					node->setType(CheckTypes::ERRORTYPE);
+				} else {
+					node->setType(CheckTypes::NOTYPE);
+				}
+				break;
+
+			default:
+				node->setType(CheckTypes::NOTYPE);
+				break;
+			}
+		}
 		break;
 
-	case STATEMENT:
+	case INDEX:
+		if (node->countChilds() > 1) {
+			typeCheck(node->getChild(1));
+			if (node->getChild(1)->getType() == CheckTypes::ERRORTYPE) {
+				node->setType(CheckTypes::ERRORTYPE);
+			} else {
+				node->setType(CheckTypes::ARRAYTYPE);
+			}
+		} else {
+			node->setType(CheckTypes::NOTYPE);
+		}
 		break;
-	}
+
+	case EXP:
+		typeCheck(node->getChild(0));
+		typeCheck(node->getChild(1));
+		if (node->getChild(1)->getType() == CheckTypes::NOTYPE) {
+			node->setType(node->getChild(0)->getType());
+		} else if (node->getChild(0)->getType()
+				!= node->getChild(1)->getType()) {
+			node->setType(CheckTypes::ERRORTYPE);
+		} else {
+			node->setType(node->getChild(0)->getType());
+		}
+		break;
+
+	case EXP2:
+		switch (node->getChild(0)->getToken()->getType()) {
+		case SIGN_LEFTBRACKET:
+			typeCheck(node->getChild(1));
+			node->setType(node->getChild(1)->getType());
+			break;
+
+		case IDENTIFIER:
+			typeCheck(node->getChild(1));
+
+			if (get(node->getChild(0)) == CheckTypes::NOTYPE) {
+				cerr << "Identifier "
+						<< node->getChild(0)->getToken()->getEntry()->getLexem()
+						<< " not defined" << endl;
+				node->setType(CheckTypes::ERRORTYPE);
+			} else if (get(node->getChild(0)) == CheckTypes::INTTYPE
+					&& node->getChild(1)->getType() == CheckTypes::NOTYPE) {
+				node->setType(get(node->getChild(0)));
+			} else if (get(node->getChild(0)) == CheckTypes::INTARRAYTYPE
+					&& node->getChild(1)->getType() == CheckTypes::ARRAYTYPE) {
+				node->setType(CheckTypes::INTTYPE);
+			} else {
+				cerr << "Identifier "
+						<< node->getChild(0)->getToken()->getEntry()->getLexem()
+						<< " no primitive types" << endl;
+				node->setType(CheckTypes::ERRORTYPE);
+			}
+
+			break;
+
+		case INTEGER:
+			node->setType(CheckTypes::INTTYPE);
+			break;
+
+		case SIGN_SUBTRACTION:
+			typeCheck(node->getChild(1));
+			node->setType(node->getChild(1)->getType());
+			break;
+
+		case SIGN_EXCLAMATION:
+			typeCheck(node->getChild(1));
+			if (node->getChild(1)->getType() != CheckTypes::INTTYPE) {
+				node->setType(CheckTypes::ERRORTYPE);
+			} else {
+				node->setType(CheckTypes::INTTYPE);
+			}
+			break;
+
+		default:
+			node->setType(CheckTypes::ERRORTYPE);
+			break;
+		}
+		break;
+
+	case OP_EXP:
+		if (node->countChilds() > 1) {
+			typeCheck(node->getChild(0));
+			typeCheck(node->getChild(1));
+			node->setType(node->getChild(1)->getType());
+		} else {
+			node->setType(CheckTypes::NOTYPE);
+		}
+		break;
+
+	case OP:
+		switch (node->getChild(0)->getToken()->getType()) {
+		case SIGN_ADDITITON:
+			node->setType(CheckTypes::OPPLUS);
+			break;
+
+		case SIGN_SUBTRACTION:
+			node->setType(CheckTypes::OPMINUS);
+			break;
+
+		case SIGN_MULTIPLICATION:
+			node->setType(CheckTypes::OPMULT);
+			break;
+
+		case SIGN_DIVISION:
+			node->setType(CheckTypes::OPDIV);
+			break;
+
+		case SIGN_LT:
+			node->setType(CheckTypes::OPLESS);
+			break;
+
+		case SIGN_GT:
+			node->setType(CheckTypes::OPGREATER);
+			break;
+
+		case SIGN_ASSIGN:
+			node->setType(CheckTypes::OPEQUAL);
+			break;
+
+		case SIGN_NE:
+			node->setType(CheckTypes::OPUNEQUAL);
+			break;
+
+		case SIGN_AMPERSAND:
+			node->setType(CheckTypes::OPAND);
+			break;
+*/
+		default:
+			node->setType(CheckTypes::ERRORTYPE);
+			break;
+		}
+
+}
+
+CheckTypes::Type ParseTree::getEntryType(Node* node) {
+	return node->getToken()->getInfoKey()->getType();
 }
 
 void ParseTree::makeCode(Node* node) {
@@ -87,14 +325,14 @@ void ParseTree::makeCode(Node* node) {
 	}
 	switch (node->getRuleType()) {
 	// PROG := DECLS STATEMENTS
-	case RuleType::PROG:
+	case PROG:
 		makeCode(node->getChild(0));
 		makeCode(node->getChild(1));
 		buffer->writeCode("STP\n");
 		break;
 
 		// DECLS := DECL; DECLS
-	case RuleType::DECLS:
+	case DECLS:
 		makeCode(node->getChild(0));
 		if (node->getChild(2)) {
 			makeCode(node->getChild(2));
@@ -102,7 +340,7 @@ void ParseTree::makeCode(Node* node) {
 		break;
 
 		// DECL := int ARRAY identifier
-	case RuleType::DECL:
+	case DECL:
 		buffer->writeCode("DS $");
 		buffer->writeCode(
 				node->getChild(2)->getToken()->getInfoKey()->getString()->getStr());
@@ -111,7 +349,7 @@ void ParseTree::makeCode(Node* node) {
 		break;
 
 		// ARRAY ::= [ integer ]
-	case RuleType::ARRAY:
+	case ARRAY:
 		if (node->countChilds() != 1) {
 			buffer->writeCode(
 					(char*) node->getChild(1)->getToken()->getInfoKey()->getValue());
@@ -122,9 +360,9 @@ void ParseTree::makeCode(Node* node) {
 		break;
 
 		// STATEMENTS ::= STATEMENT; STATEMENTS
-	case RuleType::STATEMENTS:
+	case STATEMENTS:
 		makeCode(node->getChild(0));
-		if (node->getChild(2)){
+		if (node->getChild(2)) {
 			makeCode(node->getChild(2));
 		} else {
 			buffer->writeCode("NOP\n");
@@ -132,10 +370,10 @@ void ParseTree::makeCode(Node* node) {
 		break;
 
 		//STATEMENT
-	case RuleType::STATEMENT:
+	case STATEMENT:
 		int m1, m2;
 		switch (node->getChild(0)->getRuleType()) {
-			// STATEMENT ::= identifier INDEX := EXP
+		// STATEMENT ::= identifier INDEX := EXP
 		case ID:
 			makeCode(node->getChild(3));
 			buffer->writeCode("LA $");
@@ -215,27 +453,7 @@ void ParseTree::makeCode(Node* node) {
 		break;
 
 		// EXP ::= EXP2 OP_EXP
-	case RuleType::EXP:
-		if (node->getChild(1)->getType() == CheckTypes::NOTYPE) {
-			makeCode(node->getChild(0));
-		} else if (node->getChild(1)->getChild(0)->getType()
-				== CheckTypes::OPGREATER) {
-			makeCode(node->getChild(1));
-			makeCode(node->getChild(0));
-			buffer->writeCode("LES\n");
-		} else if (node->getChild(1)->getChild(0)->getType()
-				== CheckTypes::OPUNEQUAL) {
-			makeCode(node->getChild(0));
-			makeCode(node->getChild(1));
-			buffer->writeCode("NOT\n");
-		} else {
-			makeCode(node->getChild(0));
-			makeCode(node->getChild(1));
-		}
-		break;
-
-		// EXP ::= EXP2 OP_EXP
-	case RuleType::EXP:
+	case EXP:
 		if (node->getChild(1)->getType() == CheckTypes::NOTYPE) {
 			makeCode(node->getChild(0));
 		} else if (node->getChild(1)->getChild(0)->getType()
@@ -255,7 +473,7 @@ void ParseTree::makeCode(Node* node) {
 		break;
 
 		// INDEX ::= [ EXP ] | empty
-	case RuleType::INDEX:
+	case INDEX:
 		if (node->countChilds() > 1) {
 			makeCode(node->getChild(1));
 			buffer->writeCode("ADD\n");
@@ -263,8 +481,8 @@ void ParseTree::makeCode(Node* node) {
 		break;
 
 		// EXP2
-	case RuleType::EXP2:
-		switch (node->getChild(0)->getToken()->getTT()){
+	case EXP2:
+		switch (node->getChild(0)->getToken()->getTT()) {
 
 		// EXP2 ::= ( EXP )
 		case OPEN:
@@ -284,7 +502,8 @@ void ParseTree::makeCode(Node* node) {
 			// EXP2 ::= integer
 		case INTEGER:
 			buffer->writeCode("LC ");
-			buffer->writeCode((char*)node->getChild(0)->getToken()->getInfoKey()->getValue());
+			buffer->writeCode(
+					(char*) node->getChild(0)->getToken()->getInfoKey()->getValue());
 			buffer->writeCode("\n");
 			break;
 
@@ -307,7 +526,7 @@ void ParseTree::makeCode(Node* node) {
 		break;
 
 		// OP_EXP ::= OP EXP | empty
-	case RuleType::OP_EXP:
+	case OP_EXP:
 		if (node->countChilds() > 1) {
 			makeCode(node->getChild(1));
 			makeCode(node->getChild(0));
@@ -315,7 +534,7 @@ void ParseTree::makeCode(Node* node) {
 		break;
 
 		// OP
-	case RuleType::OP:
+	case OP:
 		switch (node->getChild(0)->getRuleType()) {
 
 		// OP ::= +

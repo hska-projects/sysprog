@@ -14,7 +14,7 @@ int main (int argc, char* argv[]) {
 	tree->typeCheck(tree->getRoot());
 
 	cout << "begin makeCode()" << endl;
-	tree->makeCode();
+	tree->makeCode(tree->getRoot());
 
 	return EXIT_SUCCESS;
 }

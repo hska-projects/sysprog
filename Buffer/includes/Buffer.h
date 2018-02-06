@@ -18,7 +18,7 @@
 #include <sys/stat.h>
 class Buffer {
 public:
-	char *next,*buf1,*buf2, *writebuf;
+	char *next,*buf1,*buf2;
 	int file_;
 	int write_;
 	int nbytes;
