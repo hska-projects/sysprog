@@ -1,1 +1,1 @@
-int n;
+write(5);

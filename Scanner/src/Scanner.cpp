@@ -33,7 +33,7 @@ Token* Scanner::nextToken() {
 //new
 	while (automat->isFinalState() == 0) {
 		if(buffer->wasEndOfFile == 1) {
-			buffer->closeFile();
+			//buffer->closeFile(); file is closed in destructor
 			return NULL;
 		}
 		char tempc = buffer->getChar();

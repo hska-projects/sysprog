@@ -28,7 +28,7 @@ static int openFileReadOnly(const char* name)
 }
 
 static int openFileWrite() {
-	int fd = open("code.txt", O_RDWR);
+	int fd = open("code.txt", O_WRONLY | O_CREAT | O_DIRECT);
 	return fd;
 }
 
@@ -77,8 +77,8 @@ void Buffer::writeCode(char* c){
 
 
 void Buffer::closeFile(){
-	free (buf1);
-	free (buf2);
+	free(buf1);
+	free(buf2);
 	close(file_);
 }
 
@@ -86,6 +86,7 @@ Buffer::~Buffer() {
 	free (buf1);
 	free (buf2);
 	close (file_);
+	close(write_);
 }
 int Buffer::getLine(){
 	return line;

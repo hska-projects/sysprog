@@ -1,6 +1,5 @@
-Token     int                 Line: 1    Coloumn: 1    
-Token     IdentifierToken     Line: 1    Coloumn: 5     Lexem: n
-Token     Semicolon           Line: 1    Coloumn: 6    
-Token     IdentifierToken     Line: 2    Coloumn: 1     Lexem: a
-Token     Equals              Line: 2    Coloumn: 4    
-Token     IntegerToken        Line: 2    Coloumn: 4     Value: 0
+Token     write               Line: 1    Coloumn: 1    
+Token     Left Paranthesis    Line: 1    Coloumn: 6    
+Token     IntegerToken        Line: 1    Coloumn: 7     Value: 5
+Token     Right Paranthesis   Line: 1    Coloumn: 8    
+Token     Semicolon           Line: 1    Coloumn: 8    
