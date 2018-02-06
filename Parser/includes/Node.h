@@ -16,7 +16,7 @@ class Node {
 
 private:
 	RuleType rule;
-	CheckTypes::Type type;
+	enum CheckTypes::Type type;
 	Token* token;
 	Node* childs[7];
 	int childCounter;
