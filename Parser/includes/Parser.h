@@ -48,6 +48,7 @@ private:
 	myString* equals;
 	myString* sonder;
 	myString* andd;
+	bool wasEpsylon;
 
 public:
 	Parser(char* argv[]);
