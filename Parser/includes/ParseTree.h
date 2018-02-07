@@ -22,6 +22,19 @@ private:
 	Buffer* buffer;
 	Node* prog;
 	int marker;
+	myString* popen;
+	myString* minus;
+	myString* open;
+	myString* emark;
+
+	myString* plus;
+	myString* star;
+	myString* colon;
+	myString* lt;
+	myString* gt;
+	myString* equals;
+	myString* sonder;
+	myString* andd;
 
 public:
 	ParseTree(Buffer* buffer);

@@ -13,6 +13,20 @@ ParseTree::ParseTree(Buffer* buffer) {
 	this->prog = NULL;
 	this->buffer = buffer;
 	marker = 0;
+
+	popen = new myString("Left Bracket"); //{
+	minus = new myString("Minus"); //-
+	open = new myString("Left Paranthesis"); //(
+	emark = new myString("Exclamation"); //!
+
+	plus = new myString("Plus"); //+
+	star = new myString("Star"); //*
+	colon = new myString("Colon"); //:
+	lt = new myString("Less than"); //<
+	gt = new myString("Greater than"); //>
+	equals = new myString("Equals"); //=
+	sonder = new myString("=:=");
+	andd = new myString("And"); //&&
 }
 
 Node* ParseTree::getRoot() {
@@ -117,15 +131,14 @@ void ParseTree::typeCheck(Node* node) {
 				node->setType(CheckTypes::ERRORTYPE);
 			}
 		} else {
-			// switch (node->getChildNode(0)->getToken()->getType()) {
-			switch (node->getChild(0)->getRuleType()) {
-			case WRITE:     // (STATEMENT ::= write( EXP ) )
+			switch (node->getChild(0)->getToken()->getTT()) {
+			case WriteToken:     // (STATEMENT ::= write( EXP ) )
 				// EXP
 				typeCheck(node->getChild(2));
 				node->setType(CheckTypes::NOTYPE);
 				break;
 
-			case READ:     // (STATEMENT ::= read( identifier INDEX) )
+			case ReadToken:     // (STATEMENT ::= read( identifier INDEX) )
 				typeCheck(node->getChild(3));
 
 				if (getEntryType(node->getChild(2)) == CheckTypes::ERRORTYPE
@@ -148,12 +161,18 @@ void ParseTree::typeCheck(Node* node) {
 
 				break;
 
-			case POPEN:     // (STATEMENT ::= { STATEMENTS } )
-				typeCheck(node->getChild(1));
-				node->setType(CheckTypes::NOTYPE);
+			case OtherToken:     // (STATEMENT ::= { STATEMENTS } )
+				// TODO if-statement works? /neccessary?
+				// check if OtherToken is "{"
+				if (node->getChild(0)->getToken()->getInfoKey()->getString()->compare(
+						*popen) == 0) {
+					typeCheck(node->getChild(1));
+					node->setType(CheckTypes::NOTYPE);
+				}
+				// TODO: else??
 				break;
 
-			case IF:   // (STATEMENT ::= if	( EXP ) STATEMENT else STATEMENT )
+			case IfToken: // (STATEMENT ::= if ( EXP ) STATEMENT else STATEMENT )
 				typeCheck(node->getChild(2));
 				typeCheck(node->getChild(4));
 				typeCheck(node->getChild(6));
@@ -164,7 +183,7 @@ void ParseTree::typeCheck(Node* node) {
 				}
 				break;
 
-			case WHILE:     // (STATEMENT ::= while	( EXP ) STATEMENT)
+			case WhileToken:     // (STATEMENT ::= while ( EXP ) STATEMENT)
 				typeCheck(node->getChild(2));
 				typeCheck(node->getChild(4));
 				if (node->getChild(2)->getType() == CheckTypes::ERRORTYPE) {
@@ -182,7 +201,9 @@ void ParseTree::typeCheck(Node* node) {
 		break;
 
 	case INDEX:
+		// (INDEX ::= [ EXP ])
 		if (node->countChilds() > 1) {
+			// EXP
 			typeCheck(node->getChild(1));
 			if (node->getChild(1)->getType() == CheckTypes::ERRORTYPE) {
 				node->setType(CheckTypes::ERRORTYPE);
@@ -195,7 +216,10 @@ void ParseTree::typeCheck(Node* node) {
 		break;
 
 	case EXP:
+		// (EXP ::=	EXP2 OP_EXP)
+		// EXP2
 		typeCheck(node->getChild(0));
+		// OP_EXP
 		typeCheck(node->getChild(1));
 		if (node->getChild(1)->getType() == CheckTypes::NOTYPE) {
 			node->setType(node->getChild(0)->getType());
@@ -208,14 +232,36 @@ void ParseTree::typeCheck(Node* node) {
 		break;
 
 	case EXP2:
-		//switch (node->getChild(0)->getToken()->getType()) {
-		switch (node->getChild(0)->getRuleType()) {
-		case SQUAREOPEN:
-			typeCheck(node->getChild(1));
-			node->setType(node->getChild(1)->getType());
-			break;
+		switch (node->getChild(0)->getToken()->getTT()) {
 
-		case ID:
+		case OtherToken:
+			// (EXP2 ::= ( EXP ))
+			if (node->getChild(0)->getToken()->getInfoKey()->getString()->compare(
+					*open) == 0) {
+				typeCheck(node->getChild(1));
+				node->setType(node->getChild(1)->getType());
+				break;
+			} else
+			// (EXP2 ::= - EXP2)
+			if (node->getChild(0)->getToken()->getInfoKey()->getString()->compare(
+					*minus) == 0) {
+				typeCheck(node->getChild(1));
+				node->setType(node->getChild(1)->getType());
+				break;
+			} else
+			// (EXP2 ::= ! EXP2)
+			if (node->getChild(0)->getToken()->getInfoKey()->getString()->compare(
+					*emark) == 0) {
+				typeCheck(node->getChild(1));
+				if (node->getChild(1)->getType() != CheckTypes::INTTYPE) {
+					node->setType(CheckTypes::ERRORTYPE);
+				} else {
+					node->setType(CheckTypes::INTTYPE);
+				}
+				break;
+			}
+
+		case IdentifierToken:
 			typeCheck(node->getChild(1));
 
 			if (getEntryType(node->getChild(0)) == CheckTypes::NOTYPE) {
@@ -235,22 +281,8 @@ void ParseTree::typeCheck(Node* node) {
 
 			break;
 
-		case INTEGER:
+		case IntegerToken:
 			node->setType(CheckTypes::INTTYPE);
-			break;
-
-		case MINUS:
-			typeCheck(node->getChild(1));
-			node->setType(node->getChild(1)->getType());
-			break;
-
-		case EMARK:
-			typeCheck(node->getChild(1));
-			if (node->getChild(1)->getType() != CheckTypes::INTTYPE) {
-				node->setType(CheckTypes::ERRORTYPE);
-			} else {
-				node->setType(CheckTypes::INTTYPE);
-			}
 			break;
 
 		default:
@@ -260,9 +292,11 @@ void ParseTree::typeCheck(Node* node) {
 		break;
 
 	case OP_EXP:
+		// (OP_EXP ::= OP EXP)
 		if (node->countChilds() > 1) {
 			typeCheck(node->getChild(0));
 			typeCheck(node->getChild(1));
+			// this.type = EXP.type
 			node->setType(node->getChild(1)->getType());
 		} else {
 			node->setType(CheckTypes::NOTYPE);
@@ -270,42 +304,36 @@ void ParseTree::typeCheck(Node* node) {
 		break;
 
 	case OP:
-		//switch (node->getChild(0)->getToken()->getType()) {
-		switch (node->getChild(0)->getRuleType()) {
-		case PLUS:
-			node->setType(CheckTypes::OPPLUS);
-			break;
-
-		case MINUS:
-			node->setType(CheckTypes::OPMINUS);
-			break;
-
-		case STAR:
-			node->setType(CheckTypes::OPMULT);
-			break;
-
-		case COLON:
-			node->setType(CheckTypes::OPDIV);
-			break;
-
-		case LT:
-			node->setType(CheckTypes::OPLESS);
-			break;
-
-		case GT:
-			node->setType(CheckTypes::OPGREATER);
-			break;
-
-		case EQUALS:
-			node->setType(CheckTypes::OPEQUAL);
-			break;
-
-		case SONDER:
-			node->setType(CheckTypes::OPUNEQUAL);
-			break;
-
-		case AND:
-			node->setType(CheckTypes::OPAND);
+		switch (node->getChild(0)->getToken()->getTT()) {
+		case OtherToken:
+			if (node->getChild(0)->getToken()->getInfoKey()->getString()->compare(
+					*plus) == 0) {
+				node->setType(CheckTypes::OPPLUS);
+			} else if (node->getChild(0)->getToken()->getInfoKey()->getString()->compare(
+					*minus) == 0) {
+				node->setType(CheckTypes::OPMINUS);
+			} else if (node->getChild(0)->getToken()->getInfoKey()->getString()->compare(
+					*star) == 0) {
+				node->setType(CheckTypes::OPMULT);
+			} else if (node->getChild(0)->getToken()->getInfoKey()->getString()->compare(
+					*colon) == 0) {
+				node->setType(CheckTypes::OPDIV);
+			} else if (node->getChild(0)->getToken()->getInfoKey()->getString()->compare(
+					*lt) == 0) {
+				node->setType(CheckTypes::OPLESS);
+			} else if (node->getChild(0)->getToken()->getInfoKey()->getString()->compare(
+					*gt) == 0) {
+				node->setType(CheckTypes::OPGREATER);
+			} else if (node->getChild(0)->getToken()->getInfoKey()->getString()->compare(
+					*equals) == 0) {
+				node->setType(CheckTypes::OPEQUAL);
+			} else if (node->getChild(0)->getToken()->getInfoKey()->getString()->compare(
+					*sonder) == 0) {
+				node->setType(CheckTypes::OPUNEQUAL);
+			} else if (node->getChild(0)->getToken()->getInfoKey()->getString()->compare(
+					*andd) == 0) {
+				node->setType(CheckTypes::OPAND);
+			}
 			break;
 
 		default:
