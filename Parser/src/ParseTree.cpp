@@ -58,7 +58,7 @@ void ParseTree::typeCheck(Node* node) {
 		break;
 
 	case DECL:
-		// (DECL::=	int ARRAY identifier)
+		// (DECL::= int ARRAY identifier)
 		if (node->countChilds() == 3) {
 			// ARRAY
 			if (node->getChild(1))
@@ -107,7 +107,7 @@ void ParseTree::typeCheck(Node* node) {
 		break;
 
 	case STATEMENT:
-		// (STATEMENT ::= identifier INDEX := EXP )
+		// (STATEMENT ::= identifier INDEX := EXP)
 		if (node->getChild(0)->getRuleType() == ID) {
 			// EXP
 			typeCheck(node->getChild(3));
@@ -132,13 +132,13 @@ void ParseTree::typeCheck(Node* node) {
 			}
 		} else {
 			switch (node->getChild(0)->getToken()->getTT()) {
-			case WriteToken:     // (STATEMENT ::= write( EXP ) )
+			case WriteToken:     // (STATEMENT ::= write( EXP ))
 				// EXP
 				typeCheck(node->getChild(2));
 				node->setType(CheckTypes::NOTYPE);
 				break;
 
-			case ReadToken:     // (STATEMENT ::= read( identifier INDEX) )
+			case ReadToken:     // (STATEMENT ::= read( identifier INDEX))
 				typeCheck(node->getChild(3));
 
 				if (getEntryType(node->getChild(2)) == CheckTypes::ERRORTYPE
@@ -161,18 +161,16 @@ void ParseTree::typeCheck(Node* node) {
 
 				break;
 
-			case OtherToken:     // (STATEMENT ::= { STATEMENTS } )
-				// TODO if-statement works? /neccessary?
+			case OtherToken:     // (STATEMENT ::= { STATEMENTS })
 				// check if OtherToken is "{"
 				if (node->getChild(0)->getToken()->getInfoKey()->getString()->compare(
 						*popen) == 0) {
 					typeCheck(node->getChild(1));
 					node->setType(CheckTypes::NOTYPE);
 				}
-				// TODO: else??
 				break;
 
-			case IfToken: // (STATEMENT ::= if ( EXP ) STATEMENT else STATEMENT )
+			case IfToken:        // (STATEMENT ::= if ( EXP ) STATEMENT else STATEMENT)
 				typeCheck(node->getChild(2));
 				typeCheck(node->getChild(4));
 				typeCheck(node->getChild(6));
@@ -216,7 +214,7 @@ void ParseTree::typeCheck(Node* node) {
 		break;
 
 	case EXP:
-		// (EXP ::=	EXP2 OP_EXP)
+		// (EXP ::= EXP2 OP_EXP)
 		// EXP2
 		typeCheck(node->getChild(0));
 		// OP_EXP
@@ -236,13 +234,16 @@ void ParseTree::typeCheck(Node* node) {
 
 		case OtherToken:
 			// (EXP2 ::= ( EXP ))
+			// check if OtherToken is "("
 			if (node->getChild(0)->getToken()->getInfoKey()->getString()->compare(
 					*open) == 0) {
 				typeCheck(node->getChild(1));
+				// this.type = EXP.type;
 				node->setType(node->getChild(1)->getType());
 				break;
 			} else
 			// (EXP2 ::= - EXP2)
+			// check if OtherToken is "-"
 			if (node->getChild(0)->getToken()->getInfoKey()->getString()->compare(
 					*minus) == 0) {
 				typeCheck(node->getChild(1));
@@ -250,6 +251,7 @@ void ParseTree::typeCheck(Node* node) {
 				break;
 			} else
 			// (EXP2 ::= ! EXP2)
+			// check if OtherToken is "!"
 			if (node->getChild(0)->getToken()->getInfoKey()->getString()->compare(
 					*emark) == 0) {
 				typeCheck(node->getChild(1));
@@ -262,6 +264,7 @@ void ParseTree::typeCheck(Node* node) {
 			}
 
 		case IdentifierToken:
+			// (EXP2 ::= identifier INDEX)
 			typeCheck(node->getChild(1));
 
 			if (getEntryType(node->getChild(0)) == CheckTypes::NOTYPE) {
@@ -286,7 +289,6 @@ void ParseTree::typeCheck(Node* node) {
 			break;
 
 		default:
-			node->setType(CheckTypes::ERRORTYPE);
 			break;
 		}
 		break;
@@ -296,7 +298,7 @@ void ParseTree::typeCheck(Node* node) {
 		if (node->countChilds() > 1) {
 			typeCheck(node->getChild(0));
 			typeCheck(node->getChild(1));
-			// this.type = EXP.type
+			// this.type = EXP.type;
 			node->setType(node->getChild(1)->getType());
 		} else {
 			node->setType(CheckTypes::NOTYPE);
