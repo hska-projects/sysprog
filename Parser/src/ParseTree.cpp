@@ -410,7 +410,7 @@ void ParseTree::makeCode(Node* node) {
 			makeCode(node->getChild(3));
 			writeCode((char*)"LA $");
 			writeCode(
-					node->getChild(1)->getToken()->getInfoKey()->getString()->getStr());
+					node->getChild(0)->getToken()->getInfoKey()->getString()->getStr());
 			writeCode((char*)"\n");
 			makeCode(node->getChild(1));
 			writeCode((char*)"STR\n");
@@ -629,7 +629,7 @@ void ParseTree::writeCode(char* c) {
 }
 
 void ParseTree::createCodeFile() {
-	ofstream myfile("code.txt");
+	ofstream myfile("test.code");
 	if (myfile.is_open()) {
 		myfile << output.getStr();
 	}

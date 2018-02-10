@@ -27,12 +27,6 @@ static int openFileReadOnly(const char* name)
   return fd;
 }
 
-static int openFileWrite() {
-	int fd = open("code.txt", O_WRONLY | O_CREAT | O_DIRECT);
-	return fd;
-}
-
-
 Buffer::Buffer(const char *const fileName){
 	end = false;
 	line = 1;
@@ -61,9 +55,6 @@ Buffer::Buffer(const char *const fileName){
 		readbytes = read(file_, buf1, nbytes);
 		next = buf1;
 	}
-
-
-	write_ = openFileWrite();
 }
 
 void Buffer::closeFile(){

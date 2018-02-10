@@ -21,7 +21,7 @@ Parser::Parser(char* argv[]) {
 	scanner = new Scanner(buffer, stab);
 	popen = new myString("Left Bracket"); //{
 	pclose = new myString("Right Bracket"); //}
-	assign = new myString(":=");
+	assign = new myString("Assign");
 	open = new myString("Left Paranthesis"); //(
 	close = new myString("Right Paranthesis"); //)
 	sem = new myString("Semicolon"); //;
@@ -439,9 +439,10 @@ Node* Parser::index() {
 		wasEpsylon = false;
 		getNextToken();
 		index->add_ChildNode(exp());
+		wasEpsylon = false;
 		getNextToken();
 		if (current->getTTnummer() == 5
-				&& current->getInfoKey()->getString()->compare(*pclose) == 0) {
+				&& current->getInfoKey()->getString()->compare(*squareclose) == 0) {
 			index->add_ChildNode(new Node(SQUARECLOSE, current));
 			wasEpsylon = false;
 		} else {
