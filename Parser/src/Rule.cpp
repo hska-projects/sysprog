@@ -49,6 +49,7 @@ int Rule::getRuleType(int rule) {
 		return OP;
 		break;
 	default:
+		return -1;
 		break;
 	}
 
