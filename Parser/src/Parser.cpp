@@ -17,7 +17,7 @@ Parser::Parser(char* argv[]) {
 	current = NULL;
 	stab = new Symboltable();
 	Buffer* buffer = new Buffer(argv[1]);
-	tree = new ParseTree(buffer);
+	tree = new ParseTree();
 	scanner = new Scanner(buffer, stab);
 	popen = new myString("Left Bracket"); //{
 	pclose = new myString("Right Bracket"); //}

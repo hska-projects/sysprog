@@ -66,16 +66,6 @@ Buffer::Buffer(const char *const fileName){
 	write_ = openFileWrite();
 }
 
-
-void Buffer::writeCode(char* c){
-	int nbyte = 0;
-		while (c[nbyte] != '\0'){
-			nbyte++;
-		}
-	write(write_, c, nbyte);
-}
-
-
 void Buffer::closeFile(){
 	free(buf1);
 	free(buf2);

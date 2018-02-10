@@ -5,13 +5,15 @@
  *      Author: dominik
  */
 
+using namespace std;
+
 #include <cstddef>
+#include <fstream>
 
 #include "../includes/ParseTree.h"
 
-ParseTree::ParseTree(Buffer* buffer) {
+ParseTree::ParseTree() {
 	this->prog = NULL;
-	this->buffer = buffer;
 	marker = 0;
 
 	popen = new myString("Left Bracket"); //{
@@ -358,7 +360,7 @@ void ParseTree::makeCode(Node* node) {
 	case PROG:
 		makeCode(node->getChild(0));
 		makeCode(node->getChild(1));
-		buffer->writeCode("STP\n");
+		writeCode((char*)"STP\n");
 		break;
 
 		// DECLS := DECL; DECLS
@@ -371,21 +373,21 @@ void ParseTree::makeCode(Node* node) {
 
 		// DECL := int ARRAY identifier
 	case DECL:
-		buffer->writeCode("DS $");
-		buffer->writeCode(
+		writeCode((char*)"DS $");
+		writeCode(
 				node->getChild(2)->getToken()->getInfoKey()->getString()->getStr());
-		buffer->writeCode(" ");
+		writeCode((char*)" ");
 		makeCode(node->getChild(1));
 		break;
 
 		// ARRAY ::= [ integer ]
 	case ARRAY:
 		if (node->countChilds() != 1) {
-			buffer->writeCode(
+			writeCode(
 					node->getChild(1)->getToken()->getInfoKey()->getString()->getStr());
-			buffer->writeCode("\n");
+			writeCode((char*)"\n");
 		} else {
-			buffer->writeCode("1\n");
+			writeCode((char*)"1\n");
 		}
 		break;
 
@@ -395,7 +397,7 @@ void ParseTree::makeCode(Node* node) {
 		if (node->getChild(2)) {
 			makeCode(node->getChild(2));
 		} else {
-			buffer->writeCode("NOP\n");
+			writeCode((char*)"NOP\n");
 		}
 		break;
 
@@ -406,29 +408,29 @@ void ParseTree::makeCode(Node* node) {
 		// STATEMENT ::= identifier INDEX := EXP
 		case ID:
 			makeCode(node->getChild(3));
-			buffer->writeCode("LA $");
-			buffer->writeCode(
+			writeCode((char*)"LA $");
+			writeCode(
 					node->getChild(1)->getToken()->getInfoKey()->getString()->getStr());
-			buffer->writeCode("\n");
+			writeCode((char*)"\n");
 			makeCode(node->getChild(1));
-			buffer->writeCode("STR\n");
+			writeCode((char*)"STR\n");
 			break;
 
 			// STATEMENT ::= write ( EXP )
 		case WRITE:
 			makeCode(node->getChild(2));
-			buffer->writeCode("PRI\n");
+			writeCode((char*)"PRI\n");
 			break;
 
 			// STATEMENT ::= read ( identifier INDEX )
 		case READ:
-			buffer->writeCode("REA\n");
-			buffer->writeCode("LA $");
-			buffer->writeCode(
+			writeCode((char*)"REA\n");
+			writeCode((char*)"LA $");
+			writeCode(
 					node->getChild(2)->getToken()->getInfoKey()->getString()->getStr());
-			buffer->writeCode("\n");
+			writeCode((char*)"\n");
 			makeCode(node->getChild(3));
-			buffer->writeCode("STR\n");
+			writeCode((char*)"STR\n");
 			break;
 
 			// STATEMENT ::= { STATEMENTS }
@@ -441,40 +443,40 @@ void ParseTree::makeCode(Node* node) {
 			m1 = marker++;
 			m2 = marker++;
 			makeCode(node->getChild(2));
-			buffer->writeCode("JIN #m");
-			buffer->writeCode((char*) m1);
-			buffer->writeCode("\n");
+			writeCode((char*)"JIN #m");
+			writeCode((char*) m1);
+			writeCode((char*)"\n");
 			makeCode(node->getChild(4));
-			buffer->writeCode("JMP #m");
-			buffer->writeCode((char*) m2);
-			buffer->writeCode("\n");
-			buffer->writeCode("#m");
-			buffer->writeCode((char*) m1);
-			buffer->writeCode(" NOP\n");
+			writeCode((char*)"JMP #m");
+			writeCode((char*) m2);
+			writeCode((char*)"\n");
+			writeCode((char*)"#m");
+			writeCode((char*) m1);
+			writeCode((char*)" NOP\n");
 			makeCode(node->getChild(6));
-			buffer->writeCode("#m");
-			buffer->writeCode((char*) m2);
-			buffer->writeCode(" NOP\n");
+			writeCode((char*)"#m");
+			writeCode((char*) m2);
+			writeCode((char*)" NOP\n");
 			break;
 
 			// STATEMENT ::= while ( EXP ) STATEMENT
 		case WHILE:
 			m1 = marker++;
 			m2 = marker++;
-			buffer->writeCode("#m");
-			buffer->writeCode((char*) m1);
-			buffer->writeCode(" NOP\n");
+			writeCode((char*)"#m");
+			writeCode((char*) m1);
+			writeCode((char*)" NOP\n");
 			makeCode(node->getChild(2));
-			buffer->writeCode("JIN #m");
-			buffer->writeCode((char*) m2);
-			buffer->writeCode("\n");
+			writeCode((char*)"JIN #m");
+			writeCode((char*) m2);
+			writeCode((char*)"\n");
 			makeCode(node->getChild(4));
-			buffer->writeCode("JMP #m");
-			buffer->writeCode((char*) m1);
-			buffer->writeCode("\n");
-			buffer->writeCode("#m");
-			buffer->writeCode((char*) m2);
-			buffer->writeCode(" NOP\n");
+			writeCode((char*)"JMP #m");
+			writeCode((char*) m1);
+			writeCode((char*)"\n");
+			writeCode((char*)"#m");
+			writeCode((char*) m2);
+			writeCode((char*)" NOP\n");
 			break;
 
 		default:
@@ -490,12 +492,12 @@ void ParseTree::makeCode(Node* node) {
 				== CheckTypes::OPGREATER) {
 			makeCode(node->getChild(1));
 			makeCode(node->getChild(0));
-			buffer->writeCode("LES\n");
+			writeCode((char*)"LES\n");
 		} else if (node->getChild(1)->getChild(0)->getType()
 				== CheckTypes::OPUNEQUAL) {
 			makeCode(node->getChild(0));
 			makeCode(node->getChild(1));
-			buffer->writeCode("NOT\n");
+			writeCode((char*)"NOT\n");
 		} else {
 			makeCode(node->getChild(0));
 			makeCode(node->getChild(1));
@@ -506,7 +508,7 @@ void ParseTree::makeCode(Node* node) {
 	case INDEX:
 		if (node->countChilds() > 1) {
 			makeCode(node->getChild(1));
-			buffer->writeCode("ADD\n");
+			writeCode((char*)"ADD\n");
 		}
 		break;
 
@@ -521,33 +523,33 @@ void ParseTree::makeCode(Node* node) {
 
 			// EXP2 ::= identifier INDEX
 		case ID:
-			buffer->writeCode("LA $");
-			buffer->writeCode(
+			writeCode((char*)"LA $");
+			writeCode(
 					node->getChild(0)->getToken()->getInfoKey()->getString()->getStr());
-			buffer->writeCode("\n");
+			writeCode((char*)"\n");
 			makeCode(node->getChild(1));
-			buffer->writeCode("LV\n");
+			writeCode((char*)"LV\n");
 			break;
 
 			// EXP2 ::= integer
 		case INTEGER:
-			buffer->writeCode("LC ");
-			buffer->writeCode(
+			writeCode((char*)"LC ");
+			writeCode(
 					node->getChild(0)->getToken()->getInfoKey()->getString()->getStr());
-			buffer->writeCode("\n");
+			writeCode((char*)"\n");
 			break;
 
 			// EXP2 ::= - EXP2
 		case MINUS:
-			buffer->writeCode("LC 0\n");
+			writeCode((char*)"LC 0\n");
 			makeCode(node->getChild(1));
-			buffer->writeCode("SUB\n");
+			writeCode((char*)"SUB\n");
 			break;
 
 			// EXP2 ::= ! EXP2
 		case EMARK:
 			makeCode(node->getChild(1));
-			buffer->writeCode("NOT\n");
+			writeCode((char*)"NOT\n");
 			break;
 
 		default:
@@ -569,27 +571,27 @@ void ParseTree::makeCode(Node* node) {
 
 		// OP ::= +
 		case PLUS:
-			buffer->writeCode("ADD\n");
+			writeCode((char*)"ADD\n");
 			break;
 
 			// OP ::= -
 		case MINUS:
-			buffer->writeCode("SUB\n");
+			writeCode((char*)"SUB\n");
 			break;
 
 			// OP ::= *
 		case STAR:
-			buffer->writeCode("MUL\n");
+			writeCode((char*)"MUL\n");
 			break;
 
 			// OP ::= /
 		case COLON:
-			buffer->writeCode("DIV\n");
+			writeCode((char*)"DIV\n");
 			break;
 
 			// OP ::= <
 		case LT:
-			buffer->writeCode("LES\n");
+			writeCode((char*)"LES\n");
 			break;
 
 			// OP ::= >
@@ -599,17 +601,17 @@ void ParseTree::makeCode(Node* node) {
 
 			// OP ::= =
 		case EQUALS:
-			buffer->writeCode("EQU\n");
+			writeCode((char*)"EQU\n");
 			break;
 
 			// OP ::= =:=
 		case SONDER:
-			buffer->writeCode("EQU\n");
+			writeCode((char*)"EQU\n");
 			break;
 
 			// OP ::= &&
 		case AND:
-			buffer->writeCode("AND\n");
+			writeCode((char*)"AND\n");
 			break;
 
 		default:
@@ -618,6 +620,13 @@ void ParseTree::makeCode(Node* node) {
 		break;
 	default:
 		break;
+	}
+}
+
+void ParseTree::writeCode(char* c) {
+	ofstream myfile("code.txt");
+	if (myfile.is_open()) {
+		myfile << c;
 	}
 }
 

@@ -34,7 +34,6 @@ public:
 	Buffer(const char *const fileName);
 	~Buffer();
 
-	void writeCode(char* c);
 	void closeFile();
 	int getLine();
 	int getCollumn();

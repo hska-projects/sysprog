@@ -19,7 +19,6 @@ using namespace std;
 
 class ParseTree {
 private:
-	Buffer* buffer;
 	Node* prog;
 	int marker;
 	myString* popen;
@@ -37,7 +36,7 @@ private:
 	myString* andd;
 
 public:
-	ParseTree(Buffer* buffer);
+	ParseTree();
 	virtual ~ParseTree();
 
 	Node* getRoot();
@@ -45,6 +44,7 @@ public:
 	void typeCheck(Node* node);
 	CheckTypes::Type getEntryType(Node* node);
 	void makeCode(Node* node);
+	void writeCode(char* c);
 };
 
 #endif /* PARSER_INCLUDES_PARSETREE_H_ */
