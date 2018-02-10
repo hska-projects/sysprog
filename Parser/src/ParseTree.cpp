@@ -382,7 +382,7 @@ void ParseTree::makeCode(Node* node) {
 	case ARRAY:
 		if (node->countChilds() != 1) {
 			buffer->writeCode(
-					(char*) node->getChild(1)->getToken()->getInfoKey()->getValue());
+					node->getChild(1)->getToken()->getInfoKey()->getString()->getStr());
 			buffer->writeCode("\n");
 		} else {
 			buffer->writeCode("1\n");
@@ -512,7 +512,7 @@ void ParseTree::makeCode(Node* node) {
 
 		// EXP2
 	case EXP2:
-		switch (node->getChild(0)->getToken()->getTT()) {
+		switch (node->getChild(0)->getRuleType()) {
 
 		// EXP2 ::= ( EXP )
 		case OPEN:
@@ -533,7 +533,7 @@ void ParseTree::makeCode(Node* node) {
 		case INTEGER:
 			buffer->writeCode("LC ");
 			buffer->writeCode(
-					(char*) node->getChild(0)->getToken()->getInfoKey()->getValue());
+					node->getChild(0)->getToken()->getInfoKey()->getString()->getStr());
 			buffer->writeCode("\n");
 			break;
 

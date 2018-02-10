@@ -10,11 +10,13 @@ int main (int argc, char* argv[]) {
 	Parser* parser = new Parser(argv);
 	ParseTree* tree = parser->parse();
 
-	cout << "begin typeCheck()" << endl;
+	cout << "\nbegin typeCheck()" << endl;
 	tree->typeCheck(tree->getRoot());
+	cout << "done typeCheck()\n" << endl;
 
 	cout << "begin makeCode()" << endl;
 	tree->makeCode(tree->getRoot());
+	cout << "done makeCode()" << endl;
 
 	return EXIT_SUCCESS;
 }
