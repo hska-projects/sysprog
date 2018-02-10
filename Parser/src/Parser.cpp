@@ -451,7 +451,7 @@ Node* Parser::index() {
 		index->add_ChildNode(new Node(EPSYLON));
 		wasEpsylon = true;
 	}
-	return NULL;
+	return index;
 }
 
 Node* Parser::op() {

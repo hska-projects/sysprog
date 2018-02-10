@@ -1,3 +1,7 @@
 DS $n 1
+DS $m 3
+LA $n
+LV
+PRI
 NOP
 STP
