@@ -624,9 +624,14 @@ void ParseTree::makeCode(Node* node) {
 }
 
 void ParseTree::writeCode(char* c) {
+	myString temp(c);
+	output += temp;
+}
+
+void ParseTree::createCodeFile() {
 	ofstream myfile("code.txt");
 	if (myfile.is_open()) {
-		myfile << c;
+		myfile << output.getStr();
 	}
 }
 

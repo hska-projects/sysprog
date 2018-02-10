@@ -16,6 +16,7 @@ int main (int argc, char* argv[]) {
 
 	cout << "begin makeCode()" << endl;
 	tree->makeCode(tree->getRoot());
+	tree->createCodeFile();
 	cout << "done makeCode()" << endl;
 
 	return EXIT_SUCCESS;

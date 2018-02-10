@@ -35,6 +35,8 @@ private:
 	myString* sonder;
 	myString* andd;
 
+	myString output;
+
 public:
 	ParseTree();
 	virtual ~ParseTree();
@@ -45,6 +47,7 @@ public:
 	CheckTypes::Type getEntryType(Node* node);
 	void makeCode(Node* node);
 	void writeCode(char* c);
+	void createCodeFile();
 };
 
 #endif /* PARSER_INCLUDES_PARSETREE_H_ */
