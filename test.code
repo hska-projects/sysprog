@@ -1,22 +1,29 @@
-DS $n 1
-DS $m 3
-LC 3
-LC 4
-ADD
-LA $n
+DS $a 1
+DS $b 1
+LC 12
+LA $a
 STR
-LC 3
-LA $n
+LC 2
+LA $a
 LV
-LC 0
-LC 5
-SUB
-SUB
 MUL
-LA $n
+LA $b
 STR
-LA $n
+LA $a
+LV
+LA $b
+LV
+EQU
+NOT
+JIN #m0
+LA $a
 LV
 PRI
+JMP #m1
+#m0 NOP
+LA $b
+LV
+PRI
+#m1 NOP
 NOP
 STP

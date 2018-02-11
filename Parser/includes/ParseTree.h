@@ -47,6 +47,7 @@ public:
 	CheckTypes::Type getEntryType(Node* node);
 	void makeCode(Node* node);
 	void writeCode(char* c);
+	void writeCode(int value);
 	void createCodeFile();
 };
 

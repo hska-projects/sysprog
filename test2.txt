@@ -1,0 +1,5 @@
+int a;
+int b;
+a := 12;
+b := 2 * a;
+if (a =:= b) write(a) else write(b); 	

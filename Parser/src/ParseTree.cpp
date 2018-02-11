@@ -265,6 +265,7 @@ void ParseTree::typeCheck(Node* node) {
 				break;
 			}
 
+			break;
 		case IdentifierToken:
 			// (EXP2 ::= identifier INDEX)
 			typeCheck(node->getChild(1));
@@ -403,7 +404,8 @@ void ParseTree::makeCode(Node* node) {
 
 		//STATEMENT
 	case STATEMENT:
-		int m1, m2;
+		int m1;
+		int m2;
 		switch (node->getChild(0)->getRuleType()) {
 		// STATEMENT ::= identifier INDEX := EXP
 		case ID:
@@ -444,38 +446,38 @@ void ParseTree::makeCode(Node* node) {
 			m2 = marker++;
 			makeCode(node->getChild(2));
 			writeCode((char*)"JIN #m");
-			writeCode((char*) m1);
+			writeCode(m1);
 			writeCode((char*)"\n");
 			makeCode(node->getChild(4));
 			writeCode((char*)"JMP #m");
-			writeCode((char*) m2);
+			writeCode(m2);
 			writeCode((char*)"\n");
 			writeCode((char*)"#m");
-			writeCode((char*) m1);
+			writeCode(m1);
 			writeCode((char*)" NOP\n");
 			makeCode(node->getChild(6));
 			writeCode((char*)"#m");
-			writeCode((char*) m2);
+			writeCode(m2);
 			writeCode((char*)" NOP\n");
 			break;
 
 			// STATEMENT ::= while ( EXP ) STATEMENT
 		case WHILE:
-			m1 = marker++;
-			m2 = marker++;
+			m1 = marker + 1;
+			m2 = marker + 1;
 			writeCode((char*)"#m");
-			writeCode((char*) m1);
+			writeCode(m1);
 			writeCode((char*)" NOP\n");
 			makeCode(node->getChild(2));
 			writeCode((char*)"JIN #m");
-			writeCode((char*) m2);
+			writeCode(m2);
 			writeCode((char*)"\n");
 			makeCode(node->getChild(4));
 			writeCode((char*)"JMP #m");
-			writeCode((char*) m1);
+			writeCode(m1);
 			writeCode((char*)"\n");
 			writeCode((char*)"#m");
-			writeCode((char*) m2);
+			writeCode(m2);
 			writeCode((char*)" NOP\n");
 			break;
 
@@ -627,6 +629,14 @@ void ParseTree::writeCode(char* c) {
 	myString temp(c);
 	output += temp;
 }
+
+void ParseTree::writeCode(int value) {
+    char* buffer = new char[32];
+    sprintf(buffer, "%i", value);
+    writeCode(buffer);
+    delete [] buffer;
+}
+
 
 void ParseTree::createCodeFile() {
 	ofstream myfile("test.code");
