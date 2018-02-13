@@ -67,7 +67,6 @@ Buffer::~Buffer() {
 	free (buf1);
 	free (buf2);
 	close (file_);
-	close(write_);
 }
 int Buffer::getLine(){
 	return line;

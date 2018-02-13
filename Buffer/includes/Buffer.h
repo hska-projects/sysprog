@@ -20,7 +20,6 @@ class Buffer {
 public:
 	char *next,*buf1,*buf2;
 	int file_;
-	int write_;
 	int nbytes;
 	int readbytes;
 	int counter;

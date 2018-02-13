@@ -102,15 +102,15 @@ int Symboltable::getNumberOfEntrys() {
 
 // Initialize SymbolTable
 void Symboltable::initSymbolTable() {
-	this->insert("while", WhileToken);
-	this->insert("WHILE", WhileToken);
-	this->insert("if", IfToken);
-	this->insert("IF", IfToken);
-	this->insert("write", WriteToken);
-	this->insert("read", ReadToken);
-	this->insert("else", ElseToken);
-	this->insert("ELSE", ElseToken);
-	this->insert("int", IntToken);
+	this->insert((char*)"while", WhileToken);
+	this->insert((char*)"WHILE", WhileToken);
+	this->insert((char*)"if", IfToken);
+	this->insert((char*)"IF", IfToken);
+	this->insert((char*)"write", WriteToken);
+	this->insert((char*)"read", ReadToken);
+	this->insert((char*)"else", ElseToken);
+	this->insert((char*)"ELSE", ElseToken);
+	this->insert((char*)"int", IntToken);
 
 	/*
 	 *

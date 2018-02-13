@@ -3,26 +3,26 @@
 char* TTdef::getTokenType(int val) {
 	switch (val) {
 	case 0:
-		return "IdentifierToken";
+		return (char*)"IdentifierToken";
 	case 1:
-		return "IfToken";
+		return (char*)"IfToken";
 	case 2:
-		return "WhileToken";
+		return (char*)"WhileToken";
 	case 3:
-		return "IntegerToken";
+		return (char*)"IntegerToken";
 	case 4:
-		return "UnknownToken";
+		return (char*)"UnknownToken";
 	case 5:
-		return "OtherToken";
+		return (char*)"OtherToken";
 	case 6: 
-		return "WriteToken";
+		return (char*)"WriteToken";
 	case 7: 
-		return "ReadToken";
+		return (char*)"ReadToken";
 	case 8: 
-		return "ElseToken";
+		return (char*)"ElseToken";
 	case 9: 
-		return "IntToken";
+		return (char*)"IntToken";
 	default:
-		return "Error";
+		return (char*)"Error";
 	}
 }

@@ -345,6 +345,9 @@ void ParseTree::typeCheck(Node* node) {
 			node->setType(CheckTypes::ERRORTYPE);
 			break;
 		}
+		break;
+		default:
+			break;
 	}
 }
 
