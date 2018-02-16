@@ -1,0 +1,20 @@
+int n;
+int first;
+int second;
+int next;
+int c;
+first := 0;
+second := 1;
+c := 0;
+read(n);
+while ( c < n ) {
+	if ( c < 2 ) {
+		next := c;
+	} else {
+		next := first + second;
+		first := second;
+		second := next;
+	};
+	write(next);
+	c := c + 1;
+};

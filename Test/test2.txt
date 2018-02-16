@@ -1,0 +1,16 @@
+int a;
+int b;
+int [3] ar;
+a := 12;
+b := 2 * a;
+ar[1] := a && b;
+
+while ( ar[2] =:= a ) {
+if (a =:= b) { 
+	write(a);
+} else { 
+	write(b);
+}; 	
+};
+
+

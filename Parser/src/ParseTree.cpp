@@ -466,8 +466,8 @@ void ParseTree::makeCode(Node* node) {
 
 			// STATEMENT ::= while ( EXP ) STATEMENT
 		case WHILE:
-			m1 = marker + 1;
-			m2 = marker + 1;
+			m1 = marker++;
+			m2 = marker++;
 			writeCode((char*)"#m");
 			writeCode(m1);
 			writeCode((char*)" NOP\n");
