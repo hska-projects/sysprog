@@ -1,2 +1,101 @@
+DS $a 1
+DS $b 4
+LC 1
+LA $a
+STR
+LC 0
+LA $b
+LC 0
+ADD
+STR
+LA $a
+LV
+PRI
+REA
+LA $b
+LC 0
+ADD
+STR
+LA $a
+LV
+LA $b
+LC 0
+ADD
+LV
+LES
+NOT
+JIN #m0
+LA $a
+LV
+PRI
+NOP
+JMP #m1
+#m0 NOP
+LA $a
+LV
+LA $b
+LV
+AND
+LA $b
+LC 1
+ADD
+STR
+LA $a
+LV
+LA $b
+LC 0
+ADD
+LV
+SUB
+LA $b
+LC 2
+ADD
+STR
+LA $b
+LC 0
+ADD
+LV
+PRI
+LA $b
+LC 1
+ADD
+LV
+PRI
+LA $b
+LC 2
+ADD
+LV
+PRI
+LA $b
+LC 3
+ADD
+LV
+PRI
+LA $b
+LV
+PRI
+NOP
+#m1 NOP
+#m2 NOP
+LA $a
+LV
+LA $b
+LV
+LC 1
+ADD
+LES
+JIN #m3
+LA $a
+LV
+PRI
+LA $a
+LV
+LC 1
+ADD
+LA $a
+STR
+NOP
+JMP #m2
+#m3 NOP
 NOP
 STP

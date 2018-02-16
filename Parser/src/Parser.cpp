@@ -89,7 +89,8 @@ void Parser::unexpectedTType(int type) {
 	else {
 		cerr << "ERROR: Expected: " << TTdef::getTokenType(type) << ", Got: "
 				<< TTdef::getTokenType(current->getTTnummer())
-				<< " Token is: " << current->getInfoKey()->getString()->getStr() << endl;
+				<< " Token is: " << current->getInfoKey()->getString()->getStr()
+				<< " Column: " << current->getColoumn() << " Line " << current->getLine() << endl;
 	}
 	cerr << "Stopping..." << endl;
 	exit(1);

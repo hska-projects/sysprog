@@ -1,0 +1,23 @@
+int a;
+int [4] b;
+a := 1;
+b[0] := 0;
+write(a);
+read(b[0]);
+if (!(b[0] > a)) {
+	write(a);
+} else {
+	b[1] := a&&b;
+	b[2] := a - b[0];
+	write(b[0]);
+	write(b[1]);:*testkommentar*:
+	write(b[2] );
+	write( b[3] );
+	write(b); :*schreibt b[0]*:
+};
+while( a < (b + 1) ) {
+	write(a);
+	a := a +1;
+};
+
+	
