@@ -88,7 +88,8 @@ void Parser::unexpectedTType(int type) {
 				<< ", current is NULL" << endl;
 	else {
 		cerr << "ERROR: Expected: " << TTdef::getTokenType(type) << ", Got: "
-				<< TTdef::getTokenType(current->getTTnummer()) << endl;
+				<< TTdef::getTokenType(current->getTTnummer())
+				<< " Token is: " << current->getInfoKey()->getString()->getStr() << endl;
 	}
 	cerr << "Stopping..." << endl;
 	exit(1);

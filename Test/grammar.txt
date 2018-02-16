@@ -1,0 +1,16 @@
+0 1 2 3 4 5 6 7 8 9 0
+0a1a2a3a4a5a6a7a8a9a0
+0:1:2:3:4:5:6:7:8:9:0:
+abcdefghijklmnopqrstvwxyz
+ABCDEFGHYJKLMONPQRSTUVWXYZ
+abcdefghijklmnopqrstvwxyz1
+ABCDEFGHYJKLMONPQRSTUVWXYZ1
++-*:<>=!:==:=&&;(){}[]
+a2a2a
+write
+read
+if IF
+else ELSE
+while WHILE
+int
+
