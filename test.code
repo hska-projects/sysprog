@@ -1,5 +1,6 @@
 DS $a 1
 DS $b 1
+DS $ar 3
 LC 12
 LA $a
 STR
@@ -13,17 +14,41 @@ LA $a
 LV
 LA $b
 LV
+AND
+LA $ar
+LC 1
+ADD
+STR
+#m1 NOP
+LA $ar
+LC 2
+ADD
+LV
+LA $a
+LV
+EQU
+NOT
+JIN #m1
+LA $a
+LV
+LA $b
+LV
 EQU
 NOT
 JIN #m0
 LA $a
 LV
 PRI
+NOP
 JMP #m1
 #m0 NOP
 LA $b
 LV
 PRI
+NOP
+#m1 NOP
+NOP
+JMP #m1
 #m1 NOP
 NOP
 STP

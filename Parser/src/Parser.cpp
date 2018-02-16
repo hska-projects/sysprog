@@ -439,7 +439,6 @@ Node* Parser::index() {
 		wasEpsylon = false;
 		getNextToken();
 		index->add_ChildNode(exp());
-		wasEpsylon = false;
 		getNextToken();
 		if (current->getTTnummer() == 5
 				&& current->getInfoKey()->getString()->compare(*squareclose) == 0) {
