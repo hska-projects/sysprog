@@ -7,15 +7,15 @@ read(b[0]);
 if (!(b[0] > a)) {
 	write(a);
 } else {
-	b[1] := a&&b;
+	b[1] := 1&&2;
 	b[2] := a - b[0];
 	write(b[0]);
 	write(b[1]);:*testkommentar*:
 	write(b[2] );
 	write( b[3] );
-	write(b); :*schreibt b[0]*:
+	:*write(b); :*schreibt b[0], nicht erlaubt*:
 };
-while( a < (b + 1) ) {
+while( a < (b[0] + 1) ) {
 	write(a);
 	a := a +1;
 };

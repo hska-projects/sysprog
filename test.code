@@ -31,10 +31,8 @@ PRI
 NOP
 JMP #m1
 #m0 NOP
-LA $a
-LV
-LA $b
-LV
+LC 1
+LC 2
 AND
 LA $b
 LC 1
@@ -71,15 +69,14 @@ LC 3
 ADD
 LV
 PRI
-LA $b
-LV
-PRI
 NOP
 #m1 NOP
 #m2 NOP
 LA $a
 LV
 LA $b
+LC 0
+ADD
 LV
 LC 1
 ADD

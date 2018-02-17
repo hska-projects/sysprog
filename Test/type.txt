@@ -1,0 +1,9 @@
+int a;
+int [4] b;	
+		
+:*	
+b[1] := 1&&2; 	:*ist laut typecheck erlaubt*:
+b[1] := a&&b; 	:*ist laut typecheck nicht erlaubt -> incompatible, primitve *:
+write(b); 		:*schreibt b[0] aber laut typecheck nicht erlaubt*:
+
+	
