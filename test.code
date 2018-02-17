@@ -1,98 +1,67 @@
-DS $a 1
-DS $b 4
+DS $n 1
+DS $first 1
+DS $second 1
+DS $next 1
+DS $c 1
+LC 0
+LA $first
+STR
 LC 1
-LA $a
+LA $second
 STR
 LC 0
-LA $b
-LC 0
-ADD
+LA $c
 STR
-LA $a
-LV
-PRI
 REA
-LA $b
-LC 0
-ADD
+LA $n
 STR
-LA $a
-LV
-LA $b
-LC 0
-ADD
-LV
-LES
-NOT
-JIN #m0
-LA $a
-LV
-PRI
-NOP
-JMP #m1
 #m0 NOP
-LC 1
-LC 2
-AND
-LA $b
-LC 1
-ADD
-STR
-LA $a
+LA $c
 LV
-LA $b
-LC 0
-ADD
+LA $n
 LV
-SUB
-LA $b
-LC 2
-ADD
-STR
-LA $b
-LC 0
-ADD
-LV
-PRI
-LA $b
-LC 1
-ADD
-LV
-PRI
-LA $b
-LC 2
-ADD
-LV
-PRI
-LA $b
-LC 3
-ADD
-LV
-PRI
-NOP
-#m1 NOP
-#m2 NOP
-LA $a
-LV
-LA $b
-LC 0
-ADD
-LV
-LC 1
-ADD
 LES
-JIN #m3
-LA $a
+JIN #m1
+LA $c
+LV
+LC 2
+LES
+JIN #m2
+LA $c
+LV
+LA $next
+STR
+NOP
+JMP #m3
+#m2 NOP
+LA $first
+LV
+LA $second
+LV
+ADD
+LA $next
+STR
+LA $second
+LV
+LA $first
+STR
+LA $next
+LV
+LA $second
+STR
+NOP
+#m3 NOP
+LA $next
 LV
 PRI
-LA $a
+LA $c
 LV
 LC 1
 ADD
-LA $a
+LA $c
 STR
 NOP
-JMP #m2
-#m3 NOP
+JMP #m0
+#m1 NOP
 NOP
 STP

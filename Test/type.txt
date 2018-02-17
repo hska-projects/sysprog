@@ -1,5 +1,8 @@
 int a;
 int [4] b;	
+int a; :*already defined*:
+
+b = 1; :* wie b[0] = 1 *:
 		
 :*	
 b[1] := 1&&2; 	:*ist laut typecheck erlaubt*:
