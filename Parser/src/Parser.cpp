@@ -157,7 +157,7 @@ Node* Parser::stmts() {
 			//STMTS
 			stmts->add_ChildNode(this->stmts());
 		} else {
-			unexpectedTType(0);
+			unexpectedTType(5);
 		}
 	} else {
 		stmts->add_ChildNode(new Node(EPSYLON));
@@ -197,7 +197,7 @@ Node* Parser::stmt() {
 			getNextToken();
 			stmt->add_ChildNode(exp());
 		} else {
-			unexpectedTType(0);
+			unexpectedTType(5);
 		}
 	} else if (current->getTTnummer() == 6) { //Write
 		Node* write = new Node(WRITE, current);
@@ -249,7 +249,7 @@ Node* Parser::stmt() {
 					stmt->add_ChildNode(klammer);
 					wasEpsylon = false;
 				} else {
-					unexpectedTType(0);
+					unexpectedTType(5);
 				}
 			} else {
 				unexpectedTType(0);
@@ -338,7 +338,7 @@ Node* Parser::stmt() {
 			unexpectedTType(5);
 		}
 	} else {
-		unexpectedTType(0);
+		unexpectedTType(400);
 	}
 
 	return stmt;
