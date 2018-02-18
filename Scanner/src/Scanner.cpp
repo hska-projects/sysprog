@@ -43,7 +43,7 @@ Token* Scanner::nextToken() {
 		}
 		//call automat
 		automat->determineState(tempc);
-		if (tempc != ' ' && tempc != '\t' && tempc != '\n' && tempc != '\0') {
+		if (tempc != ' ' && tempc != '\t' && tempc != '\n' && tempc != '\0' && tempc != '\r') {
 
 				myString s(tempc);
 				if (automat->isComment) {

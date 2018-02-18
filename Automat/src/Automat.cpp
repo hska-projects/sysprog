@@ -195,7 +195,7 @@ void Automat::determineState(char c) {
 		}
 	} else if (isSig(c) == 0 && isDigit(c) == 0 && determineLetter(c) == 0) {
 	//kein bekanntes Zeichen
-		if (c != '\n' && c != '\t' && c != '\0' && c !=' ') {
+		if (c != '\n' && c != '\t' && c != '\0' && c !=' ' && c != '\r') {
 		//fail State -> Unkown Token -> Fehler
 			failState = true;
 			isFinal = true;
