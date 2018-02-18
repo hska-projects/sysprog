@@ -12,7 +12,7 @@ private:
 	myString* str;
 	TokenTypes TokenType;
 	enum CheckTypes::Type type;
-	int value;
+	long long value;
 	Entry* next;
 
 public:
@@ -25,7 +25,7 @@ public:
 	Entry* getNext();
 	void setNext(Entry* newEntry);
 	int getValue();
-	void setValue(int v);
+	void setValue(long long v);
 	CheckTypes::Type getType();
 	void setType(CheckTypes::Type type);
 	~Entry();

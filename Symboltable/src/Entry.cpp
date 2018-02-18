@@ -45,7 +45,7 @@ int Entry::getValue() {
 	return this->value;
 }
 
-void Entry::setValue(int v) {
+void Entry::setValue(long long v) {
 	this->value = v;
 }
 

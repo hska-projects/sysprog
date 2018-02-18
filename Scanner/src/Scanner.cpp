@@ -103,16 +103,20 @@ Token* Scanner::nextToken() {
 		nextToken = new Token(entry->getTT(), buffer->getLine(), buffer->getCollumn(), entry);
 	} else if (state == 'n') {
 		buffer->unGetChar();
-		int num = 0;
-		if (automat->isDigit(mystring[mystring.getLen()]) == 0) {
+		long long num = 0;
+		if (automat->isDigit(mystring[mystring.getLen()]) == 0) { //lösche letztes zeichen, wenn keine zahl
 			myString tmp;
 			for (int j = 1; j < mystring.getLen(); j++) {
 				myString tmp2(mystring[j]);
-				num = (mystring[j]-'0') + (num * 10);
 				tmp += tmp2;
 			}
 			mystring = tmp;
 		}
+
+		for (int j = 1; j <= mystring.getLen(); j++) {
+			num = (mystring[j]-'0') + (num * 10);
+		}
+
 		entry = new Entry(mystring.getStr(), IntegerToken);
 		entry->setValue(num);
 		nextToken = new Token(entry->getTT(), buffer->getLine(), buffer->getCollumn(), entry);
