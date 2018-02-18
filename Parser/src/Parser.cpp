@@ -75,6 +75,8 @@ bool Parser::getNextToken() {
 			return true;
 		} else {
 			current = NULL;
+			cerr << "ERROR: Unexpected End of File, new Token expected" << endl << "Stopping..." << endl;
+			exit(1);
 		}
 	} else {
 		wasEpsylon = false;
