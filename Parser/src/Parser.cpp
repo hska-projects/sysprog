@@ -75,7 +75,8 @@ bool Parser::getNextToken() {
 			return true;
 		} else {
 			current = NULL;
-			cerr << "ERROR: Unexpected End of File, new Token expected" << endl << "Stopping..." << endl;
+			cerr << "ERROR: Unexpected End of File, new Token expected" << endl
+					<< "Stopping..." << endl;
 			exit(1);
 		}
 	} else {
@@ -90,9 +91,10 @@ void Parser::unexpectedTType(int type) {
 				<< ", current is NULL" << endl;
 	else {
 		cerr << "ERROR: Expected: " << TTdef::getTokenType(type) << ", Got: "
-				<< TTdef::getTokenType(current->getTTnummer())
-				<< " Token is: " << current->getInfoKey()->getString()->getStr()
-				<< " Column: " << current->getColoumn() << " Line " << current->getLine() << endl;
+				<< TTdef::getTokenType(current->getTTnummer()) << ", Token is: "
+				<< current->getInfoKey()->getString()->getStr() << " Column: "
+				<< current->getColoumn() << " Line " << current->getLine()
+				<< endl;
 	}
 	cerr << "Stopping..." << endl;
 	exit(1);
@@ -445,7 +447,8 @@ Node* Parser::index() {
 		index->add_ChildNode(exp());
 		getNextToken();
 		if (current->getTTnummer() == 5
-				&& current->getInfoKey()->getString()->compare(*squareclose) == 0) {
+				&& current->getInfoKey()->getString()->compare(*squareclose)
+						== 0) {
 			index->add_ChildNode(new Node(SQUARECLOSE, current));
 			wasEpsylon = false;
 		} else {
