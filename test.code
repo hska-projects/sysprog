@@ -1,67 +1,101 @@
-DS $n 1
-DS $first 1
-DS $second 1
-DS $next 1
-DS $c 1
-LC 0
-LA $first
-STR
+DS $a 1
+DS $b 4
 LC 1
-LA $second
+LA $a
 STR
 LC 0
-LA $c
-STR
-REA
-LA $n
-STR
-#m0 NOP
-LA $c
-LV
-LA $n
-LV
-LES
-JIN #m1
-LA $c
-LV
-LC 2
-LES
-JIN #m2
-LA $c
-LV
-LA $next
-STR
-NOP
-JMP #m3
-#m2 NOP
-LA $first
-LV
-LA $second
-LV
+LA $b
+LC 0
 ADD
-LA $next
 STR
-LA $second
-LV
-LA $first
-STR
-LA $next
-LV
-LA $second
-STR
-NOP
-#m3 NOP
-LA $next
+LA $a
 LV
 PRI
-LA $c
+REA
+LA $b
+LC 0
+ADD
+STR
+LA $a
+LV
+LA $b
+LC 0
+ADD
+LV
+LES
+NOT
+JIN #m0
+LA $a
+LV
+PRI
+NOP
+JMP #m1
+#m0 NOP
+LC 1
+LC 2
+AND
+LA $b
+LC 1
+ADD
+STR
+LA $a
+LV
+LA $b
+LC 0
+ADD
+LV
+SUB
+LA $b
+LC 2
+ADD
+STR
+LA $b
+LC 0
+ADD
+LV
+PRI
+LA $b
+LC 1
+ADD
+LV
+PRI
+LA $b
+LC 2
+ADD
+LV
+PRI
+LA $b
+LC 3
+ADD
+LV
+PRI
+LA $b
+LV
+PRI
+NOP
+#m1 NOP
+#m2 NOP
+LA $a
+LV
+LA $b
+LC 0
+ADD
 LV
 LC 1
 ADD
-LA $c
+LES
+JIN #m3
+LA $a
+LV
+PRI
+LA $a
+LV
+LC 1
+ADD
+LA $a
 STR
 NOP
-JMP #m0
-#m1 NOP
+JMP #m2
+#m3 NOP
 NOP
 STP

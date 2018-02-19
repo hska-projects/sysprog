@@ -15,6 +15,11 @@ Node::Node(RuleType rule) {
 	this->type = CheckTypes::NOTYPE;
 	Leaf = true;
 	childCounter = 0;
+	int i = 0;
+	while (i < 7) {
+		childs[i] = NULL;
+		i++;
+	}
 }
 
 Node::Node(RuleType rule, Token* token) {
@@ -23,6 +28,11 @@ Node::Node(RuleType rule, Token* token) {
 	this->type = CheckTypes::NOTYPE;
 	Leaf = true;
 	childCounter = 0;
+	int i = 0;
+	while (i < 7) {
+		childs[i] = NULL;
+		i++;
+	}
 }
 
 Node::~Node() {
